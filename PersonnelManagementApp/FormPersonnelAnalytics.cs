@@ -1578,7 +1578,7 @@ namespace PersonnelManagementApp
                 return filtered.Where(p => p.ProvinceID > 0 && provinceCache.ContainsKey(p.ProvinceID) && provinceCache[p.ProvinceID] == filterValue)
                     .Select(ToDetail).ToList();
 
-            if (title.Contains("تحصیلات"))
+            if (title.Contains("مدارک") || title.Contains("تحصیلات"))
                 return filtered.Where(p => p.DegreeID > 0 && degreeCache.ContainsKey(p.DegreeID) && degreeCache[p.DegreeID] == filterValue)
                     .Select(ToDetail).ToList();
 
