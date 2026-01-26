@@ -1024,10 +1024,11 @@ namespace PersonnelManagementApp
             Form detailsForm = new Form
             {
                 Text = $"👥 جزئیات پرسنل - {category}",
-                Size = new Size(1100, 650),
+                Size = new Size(1400, 800),
                 StartPosition = FormStartPosition.CenterScreen,
                 RightToLeft = RightToLeft.Yes,
-                BackColor = Color.FromArgb(240, 248, 255)
+                BackColor = Color.FromArgb(240, 248, 255),
+                WindowState = FormWindowState.Maximized
             };
 
             // =============== DataGridView ===============
@@ -1039,13 +1040,16 @@ namespace PersonnelManagementApp
                 RightToLeft = RightToLeft.Yes,
                 BackgroundColor = Color.White,
                 EnableHeadersVisualStyles = false,
-                AllowUserToAddRows = false
+                AllowUserToAddRows = false,
+                ColumnHeadersHeight = 40,
+                RowTemplate = { Height = 35 }
             };
 
             dgv.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(0, 102, 204);
             dgv.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
             dgv.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 11, FontStyle.Bold);
-            dgv.ColumnHeadersHeight = 35;
+            dgv.DefaultCellStyle.Font = new Font("Segoe UI", 10);
+            dgv.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(240, 248, 255);
 
             dgv.Columns.Add("PersonnelID", "ID");
             dgv.Columns["PersonnelID"].Visible = false;
@@ -1067,12 +1071,14 @@ namespace PersonnelManagementApp
                 HeaderText = "✏️ ویرایش",
                 Text = "ویرایش",
                 UseColumnTextForButtonValue = true,
+                Width = 120,
                 DefaultCellStyle = new DataGridViewCellStyle
                 {
                     BackColor = Color.FromArgb(40, 167, 69),
                     ForeColor = Color.White,
-                    Font = new Font("Segoe UI", 9, FontStyle.Bold),
-                    Alignment = DataGridViewContentAlignment.MiddleCenter
+                    Font = new Font("Segoe UI", 10, FontStyle.Bold),
+                    Alignment = DataGridViewContentAlignment.MiddleCenter,
+                    Padding = new Padding(5)
                 }
             };
             dgv.Columns.Add(editColumn);
@@ -1083,12 +1089,14 @@ namespace PersonnelManagementApp
                 HeaderText = "🗑️ حذف",
                 Text = "حذف",
                 UseColumnTextForButtonValue = true,
+                Width = 120,
                 DefaultCellStyle = new DataGridViewCellStyle
                 {
                     BackColor = Color.FromArgb(220, 53, 69),
                     ForeColor = Color.White,
-                    Font = new Font("Segoe UI", 9, FontStyle.Bold),
-                    Alignment = DataGridViewContentAlignment.MiddleCenter
+                    Font = new Font("Segoe UI", 10, FontStyle.Bold),
+                    Alignment = DataGridViewContentAlignment.MiddleCenter,
+                    Padding = new Padding(5)
                 }
             };
             dgv.Columns.Add(deleteColumn);
