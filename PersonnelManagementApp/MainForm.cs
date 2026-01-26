@@ -101,7 +101,6 @@ namespace PersonnelManagementApp
             btnSearch.Click += (s, e) => new FormPersonnelSearch().ShowDialog();
             this.Controls.Add(btnSearch);
 
-            // دکمه جزئیات پرسنل
             // دکمه تحلیل داده‌های پرسنل
             Button btnAnalytics = new Button
             {
@@ -113,13 +112,11 @@ namespace PersonnelManagementApp
                 ForeColor = Color.White
             };
             ApplyRoundedCorners(btnAnalytics, 15);
-
-            btnAnalytics.Click += (s, e) => new FormPersonnelAnalyticsAdvanced().ShowDialog();
-
-
-            //btnAnalytics.Click += (s, e) => new FormPersonnelAnalytics().ShowDialog();
+            
+            // ✅ مشکل حل شد: FormPersonnelAnalyticsAdvanced -> FormPersonnelAnalytics
+            btnAnalytics.Click += (s, e) => new FormPersonnelAnalytics().ShowDialog();
+            
             this.Controls.Add(btnAnalytics);
-
 
             // دکمه خروج
             Button btnExit = new Button
@@ -135,8 +132,6 @@ namespace PersonnelManagementApp
             btnExit.Click += (s, e) => Application.Exit();
             this.Controls.Add(btnExit);
         }
-
-
 
         private void ApplyRoundedCorners(Control control, int radius)
         {
