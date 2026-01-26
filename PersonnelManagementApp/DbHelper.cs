@@ -9,39 +9,106 @@ namespace PersonnelManagementApp
     public class DbHelper
     {
         private readonly string connectionString;
+        private static readonly string configFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "dbconfig.ini");
 
         public DbHelper()
         {
             connectionString = GetConnectionString();
         }
 
-        /// <summary>
-        /// Dynamically resolves the database path based on application directory
-        /// </summary>
         private string GetConnectionString()
         {
             try
             {
-                // Get the application's base directory
-                string appDirectory = AppDomain.CurrentDomain.BaseDirectory;
-                
-                // Construct the full path to the database
-                string dbPath = Path.Combine(appDirectory, "MyDatabase.accdb");
-                
-                // Verify the database file exists
-                if (!File.Exists(dbPath))
+                string dbPath = GetSavedDatabasePath();
+
+                if (string.IsNullOrEmpty(dbPath) || !File.Exists(dbPath))
                 {
-                    throw new FileNotFoundException($"Database file not found at: {dbPath}");
+                    dbPath = SelectDatabasePath();
+                    if (string.IsNullOrEmpty(dbPath))
+                    {
+                        throw new FileNotFoundException("User did not select a database.");
+                    }
                 }
-                
+
                 return $@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={dbPath};Persist Security Info=False;";
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"خطا در پیدا کردن مسیر پایگاه داده: {ex.Message}", 
-                                "خطا", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error finding database path: {ex.Message}",
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 throw;
             }
+        }
+
+        private string GetSavedDatabasePath()
+        {
+            try
+            {
+                if (File.Exists(configFile))
+                {
+                    string[] lines = File.ReadAllLines(configFile);
+                    foreach (string line in lines)
+                    {
+                        if (line.StartsWith("DatabasePath="))
+                        {
+                            string path = line.Substring("DatabasePath=".Length);
+                            if (!string.IsNullOrWhiteSpace(path))
+                            {
+                                return path;
+                            }
+                        }
+                    }
+                }
+
+                string defaultPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MyDatabase.accdb");
+                if (File.Exists(defaultPath))
+                {
+                    SaveDatabasePath(defaultPath);
+                    return defaultPath;
+                }
+
+                return null;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        private void SaveDatabasePath(string dbPath)
+        {
+            try
+            {
+                string content = $"DatabasePath={dbPath}\nLastUpdated={DateTime.Now:yyyy-MM-dd HH:mm:ss}";
+                File.WriteAllText(configFile, content);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error saving database path: {ex.Message}",
+                                "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private string SelectDatabasePath()
+        {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.Title = "Select Database File";
+                openFileDialog.Filter = "Access Database (*.accdb)|*.accdb|Access Database (*.mdb)|*.mdb|All Files (*.*)|*.*";
+                openFileDialog.InitialDirectory = AppDomain.CurrentDomain.BaseDirectory;
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    string selectedPath = openFileDialog.FileName;
+                    SaveDatabasePath(selectedPath);
+                    MessageBox.Show($"Database selected:\n{selectedPath}\n\nThis path has been saved for future use.",
+                                    "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return selectedPath;
+                }
+            }
+
+            return null;
         }
 
         public string GetConnectionString_Public()
@@ -73,8 +140,8 @@ namespace PersonnelManagementApp
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"خطا در اتصال به دیتابیس: {ex.Message}\nInner Exception: {ex.InnerException?.Message}\nConnection String: {connectionString}\nQuery: {query}",
-                                "خطا", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error connecting to database: {ex.Message}\nInner Exception: {ex.InnerException?.Message}\nConnection String: {connectionString}\nQuery: {query}",
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }
         }
@@ -98,8 +165,8 @@ namespace PersonnelManagementApp
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"خطا در اجرای عملیات: {ex.Message}\nInner Exception: {ex.InnerException?.Message}\nConnection String: {connectionString}\nQuery: {query}",
-                                "خطا", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error executing operation: {ex.Message}\nInner Exception: {ex.InnerException?.Message}\nConnection String: {connectionString}\nQuery: {query}",
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return 0;
             }
         }
@@ -116,8 +183,8 @@ namespace PersonnelManagementApp
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"تست اتصال ناموفق بود: {ex.Message}\nInner Exception: {ex.InnerException?.Message}\nConnection String: {connectionString}",
-                                "خطا در تست اتصال", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Connection test failed: {ex.Message}\nInner Exception: {ex.InnerException?.Message}\nConnection String: {connectionString}",
+                                "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
         }
@@ -199,7 +266,7 @@ namespace PersonnelManagementApp
         {
             if (dt == null || dt.Rows.Count == 0)
             {
-                MessageBox.Show("هیچ داده‌ای برای اکسپورت وجود ندارد.", "هشدار", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("No data to export.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -227,12 +294,12 @@ namespace PersonnelManagementApp
                         sw.WriteLine();
                     }
                 }
-                MessageBox.Show($"با موفقیت به {filePath} اکسپورت شد!", "موفقیت", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($"Successfully exported to {filePath}!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"خطا در اکسپورت: {ex.Message}\nInner Exception: {ex.InnerException?.Message}",
-                                "خطا", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error exporting: {ex.Message}\nInner Exception: {ex.InnerException?.Message}",
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
