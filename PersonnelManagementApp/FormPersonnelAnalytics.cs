@@ -1024,20 +1024,22 @@ namespace PersonnelManagementApp
             Form detailsForm = new Form
             {
                 Text = $"👥 جزئیات پرسنل - {category}",
-                Size = new Size(1000, 600),
+                Size = new Size(1100, 650),
                 StartPosition = FormStartPosition.CenterScreen,
                 RightToLeft = RightToLeft.Yes,
                 BackColor = Color.FromArgb(240, 248, 255)
             };
 
+            // =============== DataGridView ===============
             DataGridView dgv = new DataGridView
             {
                 Dock = DockStyle.Fill,
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells,
-                ReadOnly = true,
+                ReadOnly = false, // تغییر به false برای اضافه کردن ستون action
                 RightToLeft = RightToLeft.Yes,
                 BackgroundColor = Color.White,
-                EnableHeadersVisualStyles = false
+                EnableHeadersVisualStyles = false,
+                AllowUserToAddRows = false
             };
 
             dgv.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(0, 102, 204);
@@ -1045,6 +1047,8 @@ namespace PersonnelManagementApp
             dgv.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 11, FontStyle.Bold);
             dgv.ColumnHeadersHeight = 35;
 
+            dgv.Columns.Add("PersonnelID", "ID");
+            dgv.Columns["PersonnelID"].Visible = false; // مخفی کردن ID
             dgv.Columns.Add("FirstName", "نام");
             dgv.Columns.Add("LastName", "نام‌خانوادگی");
             dgv.Columns.Add("PersonnelNumber", "شماره پرسنلی");
@@ -1056,14 +1060,125 @@ namespace PersonnelManagementApp
             dgv.Columns.Add("HireDate", "تاریخ استخدام");
             dgv.Columns.Add("MobileNumber", "تلفن");
 
+            // ستون اکشن با دکمه ها
+            DataGridViewButtonColumn editColumn = new DataGridViewButtonColumn
+            {
+                Name = "Edit",
+                HeaderText = "✏️ ویرایش",
+                Text = "ویرایش",
+                UseColumnTextForButtonValue = true,
+                DefaultCellStyle = new DataGridViewCellStyle
+                {
+                    BackColor = Color.FromArgb(40, 167, 69),
+                    ForeColor = Color.White,
+                    Font = new Font("Segoe UI", 9, FontStyle.Bold),
+                    Alignment = DataGridViewContentAlignment.MiddleCenter
+                }
+            };
+            dgv.Columns.Add(editColumn);
+
+            DataGridViewButtonColumn deleteColumn = new DataGridViewButtonColumn
+            {
+                Name = "Delete",
+                HeaderText = "🗑️ حذف",
+                Text = "حذف",
+                UseColumnTextForButtonValue = true,
+                DefaultCellStyle = new DataGridViewCellStyle
+                {
+                    BackColor = Color.FromArgb(220, 53, 69),
+                    ForeColor = Color.White,
+                    Font = new Font("Segoe UI", 9, FontStyle.Bold),
+                    Alignment = DataGridViewContentAlignment.MiddleCenter
+                }
+            };
+            dgv.Columns.Add(deleteColumn);
+
+            // پر کردن داده ها
+            int rowIndex = 0;
             foreach (var p in personnel)
             {
-                dgv.Rows.Add(p.FirstName, p.LastName, p.PersonnelNumber, p.NationalID, p.PostName,
-                    p.DeptName, p.Province, p.ContractType, p.HireDate?.ToString("yyyy/MM/dd"), p.MobileNumber);
+                dgv.Rows.Add(p.PersonnelID, p.FirstName, p.LastName, p.PersonnelNumber, p.NationalID, p.PostName,
+                    p.DeptName, p.Province, p.ContractType, p.HireDate?.ToString("yyyy/MM/dd"), p.MobileNumber, "ویرایش", "حذف");
+                rowIndex++;
             }
+
+            // Event handler برای کلیک دکمه ها
+            dgv.CellClick += (sender, e) =>
+            {
+                if (e.ColumnIndex == dgv.Columns["Edit"].Index && e.RowIndex >= 0)
+                {
+                    int personnelID = Convert.ToInt32(dgv.Rows[e.RowIndex].Cells["PersonnelID"].Value);
+                    OpenEditForm(personnelID, detailsForm);
+                }
+                else if (e.ColumnIndex == dgv.Columns["Delete"].Index && e.RowIndex >= 0)
+                {
+                    int personnelID = Convert.ToInt32(dgv.Rows[e.RowIndex].Cells["PersonnelID"].Value);
+                    DeletePersonnel(personnelID, detailsForm, dgv, e.RowIndex);
+                }
+            };
 
             detailsForm.Controls.Add(dgv);
             detailsForm.ShowDialog();
+        }
+
+        // =============== متد باز کردن فرم ویرایش ===============
+        private void OpenEditForm(int personnelID, Form parentForm)
+        {
+            try
+            {
+                // اینجا باید فرم ویرایش رو باز کنید
+                // فرض می‌کنم FormPersonnelEdit وجود داره
+                // اگر این class تو فایل دیگری هست، import کنید
+                
+                // مثال:
+                var editForm = new FormPersonnelEdit(personnelID, dbHelper);
+                editForm.ShowDialog(parentForm);
+                
+                // بعد از بستن فرم، داده ها آپدیت می‌شند
+                RefreshAllCharts();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"❌ خطا در باز کردن فرم ویرایش: {ex.Message}", "خطا", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        // =============== متد حذف پرسنل ===============
+        private void DeletePersonnel(int personnelID, Form parentForm, DataGridView dgv, int rowIndex)
+        {
+            try
+            {
+                DialogResult result = MessageBox.Show(
+                    $"❓ آیا مطمئن هستید که می‌خواهید این پرسنل را حذف کنید؟",
+                    "تایید حذف",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+
+                if (result == DialogResult.Yes)
+                {
+                    // دستور حذف از دیتابیس
+                    string query = $"DELETE FROM Personnel WHERE PersonnelID = {personnelID}";
+                    dbHelper.ExecuteNonQuery(query);
+
+                    MessageBox.Show("✅ پرسنل با موفقیت حذف شد.", "موفق", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    // حذف سطر از جدول
+                    dgv.Rows.RemoveAt(rowIndex);
+
+                    // آپدیت نمودارها
+                    RefreshAllCharts();
+
+                    // اگر جدول خالی شد، فرم رو ببند
+                    if (dgv.Rows.Count == 0)
+                    {
+                        parentForm.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"❌ خطا در حذف پرسنل: {ex.Message}", "خطا", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void LoadStatisticalTable()
@@ -1595,6 +1710,7 @@ namespace PersonnelManagementApp
 
         private PersonnelDetail ToDetail(PersonnelRecord p) => new PersonnelDetail
         {
+            PersonnelID = p.PersonnelID,
             FirstName = p.FirstName,
             LastName = p.LastName,
             PersonnelNumber = p.PersonnelNumber,
@@ -1647,6 +1763,7 @@ namespace PersonnelManagementApp
 
     public class PersonnelDetail
     {
+        public int PersonnelID { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string PersonnelNumber { get; set; }
