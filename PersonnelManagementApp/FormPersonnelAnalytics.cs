@@ -89,10 +89,11 @@ namespace PersonnelManagementApp
             lblFilterInfo = new Label();
 
             InitializeComponent();
+            BuildUI();
             LoadData();
         }
 
-        private void InitializeComponent()
+        private void BuildUI()
         {
             Text = "🎯 تحلیل دادههای پرسنل - سیستم پیشرفته";
             WindowState = FormWindowState.Maximized;
