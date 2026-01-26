@@ -8,10 +8,43 @@ namespace PersonnelManagementApp
 {
     public class DbHelper
     {
-        //private readonly string connectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=|DataDirectory|\MyDatabase.accdb;Persist Security Info=False;";
-        //C:\saleh\PersonnelManagementApp\PersonnelManagementApp\MyDatabase.laccdb
-        private readonly string connectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\saleh\PersonnelManagementApp\PersonnelManagementApp\MyDatabase.accdb;Persist Security Info=False;";
-        public string GetConnectionString()
+        private readonly string connectionString;
+
+        public DbHelper()
+        {
+            connectionString = GetConnectionString();
+        }
+
+        /// <summary>
+        /// Dynamically resolves the database path based on application directory
+        /// </summary>
+        private string GetConnectionString()
+        {
+            try
+            {
+                // Get the application's base directory
+                string appDirectory = AppDomain.CurrentDomain.BaseDirectory;
+                
+                // Construct the full path to the database
+                string dbPath = Path.Combine(appDirectory, "MyDatabase.accdb");
+                
+                // Verify the database file exists
+                if (!File.Exists(dbPath))
+                {
+                    throw new FileNotFoundException($"Database file not found at: {dbPath}");
+                }
+                
+                return $@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={dbPath};Persist Security Info=False;";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"خطا در پیدا کردن مسیر پایگاه داده: {ex.Message}", 
+                                "خطا", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                throw;
+            }
+        }
+
+        public string GetConnectionString_Public()
         {
             return connectionString;
         }
@@ -40,8 +73,8 @@ namespace PersonnelManagementApp
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ø®Ø·Ø§ Ø¯Ø± Ø§ØªØµØ§Ù„ Ø¨Ù‡ Ø¯ÛŒØªØ§Ø¨ÛŒØ³: {ex.Message}\nInner Exception: {ex.InnerException?.Message}\nConnection String: {connectionString}\nQuery: {query}",
-                                "Ø®Ø·Ø§", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"خطا در اتصال به دیتابیس: {ex.Message}\nInner Exception: {ex.InnerException?.Message}\nConnection String: {connectionString}\nQuery: {query}",
+                                "خطا", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }
         }
@@ -65,8 +98,8 @@ namespace PersonnelManagementApp
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ø®Ø·Ø§ Ø¯Ø± Ø§Ø¬Ø±Ø§ÛŒ Ø¹Ù…Ù„ÛŒØ§Øª: {ex.Message}\nInner Exception: {ex.InnerException?.Message}\nConnection String: {connectionString}\nQuery: {query}",
-                                "Ø®Ø·Ø§", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"خطا در اجرای عملیات: {ex.Message}\nInner Exception: {ex.InnerException?.Message}\nConnection String: {connectionString}\nQuery: {query}",
+                                "خطا", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return 0;
             }
         }
@@ -83,8 +116,8 @@ namespace PersonnelManagementApp
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"ØªØ³Øª Ø§ØªØµØ§Ù„ Ù†Ø§Ù…ÙˆÙÙ‚ Ø¨ÙˆØ¯: {ex.Message}\nInner Exception: {ex.InnerException?.Message}\nConnection String: {connectionString}",
-                                "Ø®Ø·Ø§ Ø¯Ø± ØªØ³Øª Ø§ØªØµØ§Ù„", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"تست اتصال ناموفق بود: {ex.Message}\nInner Exception: {ex.InnerException?.Message}\nConnection String: {connectionString}",
+                                "خطا در تست اتصال", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
         }
@@ -166,7 +199,7 @@ namespace PersonnelManagementApp
         {
             if (dt == null || dt.Rows.Count == 0)
             {
-                MessageBox.Show("Ù‡ÛŒÚ† Ø¯Ø§Ø¯Ù‡â€ŒØ§ÛŒ Ø¨Ø±Ø§ÛŒ Ø§Ú©Ø³Ù¾ÙˆØ±Øª ÙˆØ¬ÙˆØ¯ Ù†Ø¯Ø§Ø±Ø¯.", "Ù‡Ø´Ø¯Ø§Ø±", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("هیچ داده‌ای برای اکسپورت وجود ندارد.", "هشدار", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -194,12 +227,12 @@ namespace PersonnelManagementApp
                         sw.WriteLine();
                     }
                 }
-                MessageBox.Show($"Ø¨Ø§ Ù…ÙˆÙÙ‚ÛŒØª Ø¨Ù‡ {filePath} Ø§Ú©Ø³Ù¾ÙˆØ±Øª Ø´Ø¯!", "Ù…ÙˆÙÙ‚ÛŒØª", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($"با موفقیت به {filePath} اکسپورت شد!", "موفقیت", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ø®Ø·Ø§ Ø¯Ø± Ø§Ú©Ø³Ù¾ÙˆØ±Øª: {ex.Message}\nInner Exception: {ex.InnerException?.Message}",
-                                "Ø®Ø·Ø§", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"خطا در اکسپورت: {ex.Message}\nInner Exception: {ex.InnerException?.Message}",
+                                "خطا", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
