@@ -1035,7 +1035,7 @@ namespace PersonnelManagementApp
             {
                 Dock = DockStyle.Fill,
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells,
-                ReadOnly = false, // تغییر به false برای اضافه کردن ستون action
+                ReadOnly = false,
                 RightToLeft = RightToLeft.Yes,
                 BackgroundColor = Color.White,
                 EnableHeadersVisualStyles = false,
@@ -1048,7 +1048,7 @@ namespace PersonnelManagementApp
             dgv.ColumnHeadersHeight = 35;
 
             dgv.Columns.Add("PersonnelID", "ID");
-            dgv.Columns["PersonnelID"].Visible = false; // مخفی کردن ID
+            dgv.Columns["PersonnelID"].Visible = false;
             dgv.Columns.Add("FirstName", "نام");
             dgv.Columns.Add("LastName", "نام‌خانوادگی");
             dgv.Columns.Add("PersonnelNumber", "شماره پرسنلی");
@@ -1060,7 +1060,7 @@ namespace PersonnelManagementApp
             dgv.Columns.Add("HireDate", "تاریخ استخدام");
             dgv.Columns.Add("MobileNumber", "تلفن");
 
-            // ستون اکشن با دکمه ها
+            // سیل‌های اکشن
             DataGridViewButtonColumn editColumn = new DataGridViewButtonColumn
             {
                 Name = "Edit",
@@ -1093,7 +1093,6 @@ namespace PersonnelManagementApp
             };
             dgv.Columns.Add(deleteColumn);
 
-            // پر کردن داده ها
             int rowIndex = 0;
             foreach (var p in personnel)
             {
@@ -1102,7 +1101,7 @@ namespace PersonnelManagementApp
                 rowIndex++;
             }
 
-            // Event handler برای کلیک دکمه ها
+            // Event Handler برای کلیک دکمه ها
             dgv.CellClick += (sender, e) =>
             {
                 if (e.ColumnIndex == dgv.Columns["Edit"].Index && e.RowIndex >= 0)
@@ -1126,15 +1125,13 @@ namespace PersonnelManagementApp
         {
             try
             {
-                // اینجا باید فرم ویرایش رو باز کنید
-                // فرض می‌کنم FormPersonnelEdit وجود داره
-                // اگر این class تو فایل دیگری هست، import کنید
-                
-                // مثال:
-                var editForm = new FormPersonnelEdit(personnelID, dbHelper);
+                // فرم ویرایش رو باز کنید
+                FormPersonnelEdit editForm = new FormPersonnelEdit();
+                editForm.txtPersonnelID.Text = personnelID.ToString();
+                editForm.BtnLoad_Click(null, EventArgs.Empty);
                 editForm.ShowDialog(parentForm);
                 
-                // بعد از بستن فرم، داده ها آپدیت می‌شند
+                // بعد از بسته شدن فرم، آپدیت کنید
                 RefreshAllCharts();
             }
             catch (Exception ex)
@@ -1166,9 +1163,10 @@ namespace PersonnelManagementApp
                     dgv.Rows.RemoveAt(rowIndex);
 
                     // آپدیت نمودارها
+                    LoadData();
                     RefreshAllCharts();
 
-                    // اگر جدول خالی شد، فرم رو ببند
+                    // اگر جدول خالی شد، فرم رو ببندید
                     if (dgv.Rows.Count == 0)
                     {
                         parentForm.Close();
@@ -1666,7 +1664,6 @@ namespace PersonnelManagementApp
         {
             var filtered = GetFiltered();
 
-            // تعیین اینکه کدام نمودار کلیک شده است
             string title = chart.Titles.Count > 0 ? chart.Titles[0].Text : "";
 
             if (title.Contains("اداره"))
