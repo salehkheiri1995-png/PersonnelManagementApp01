@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Windows.Forms;
@@ -9,7 +9,7 @@ using System.Drawing.Drawing2D;
 
 namespace PersonnelManagementApp
 {
-    public class FormPersonnelAnalyticsAdvanced : Form
+    public partial class FormPersonnelAnalytics : Form
     {
         private readonly DbHelper dbHelper;
         private readonly TabControl tabControl;
@@ -52,7 +52,7 @@ namespace PersonnelManagementApp
         private DateTimePicker dtpHireDateTo;
         private CheckBox chkHireDateFilter;
 
-        public FormPersonnelAnalyticsAdvanced()
+        public FormPersonnelAnalytics()
         {
             dbHelper = new DbHelper();
             analyticsModel = new AnalyticsDataModel();
