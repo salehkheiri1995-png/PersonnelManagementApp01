@@ -11,7 +11,7 @@ namespace PersonnelManagementApp
     public partial class FormPersonnelEdit : Form
     {
         private DbHelper db = new DbHelper();
-        private TextBox txtPersonnelID;
+        public TextBox txtPersonnelID;
         private TextBox txtFreeSearch;
         private DataTable searchTablePersonnel;
         private DataTable provincesTable, citiesTable, transferAffairsTable, operationDepartmentsTable, districtsTable, postsNamesTable;
@@ -693,7 +693,7 @@ namespace PersonnelManagementApp
             }
         }
 
-        private void BtnLoad_Click(object sender, EventArgs e)
+        public void BtnLoad_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(txtPersonnelID.Text) || !int.TryParse(txtPersonnelID.Text, out int personnelID))
             {
