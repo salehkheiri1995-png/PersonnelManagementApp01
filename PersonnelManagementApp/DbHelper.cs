@@ -670,5 +670,71 @@ namespace PersonnelManagementApp
             DataTable? dt = ExecuteQuery(query, parameters);
             return dt?.Rows.Count > 0 ? dt.Rows[0]["ChartID"] : null;
         }
+
+        // ============ NEW: Personnel Management Methods ============
+
+        /// <summary>
+        /// حذف پرسنل از دیتابیس
+        /// </summary>
+        public bool DeletePersonnel(int personnelID)
+        {
+            try
+            {
+                string query = "DELETE FROM Personnel WHERE PersonnelID = ?";
+                OleDbParameter[] parameters = new OleDbParameter[]
+                {
+                    new OleDbParameter("?", personnelID)
+                };
+                int result = ExecuteNonQuery(query, parameters);
+                return result > 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"خطا در حذف پرسنل: {ex.Message}", "خطا", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// دریافت تمام اطلاعات پرسنل بر اساس ID
+        /// </summary>
+        public DataTable? GetPersonnelByID(int personnelID)
+        {
+            try
+            {
+                string query = @"SELECT Personnel.*, Provinces.ProvinceName, Cities.CityName, TransferAffairs.AffairName, OperationDepartments.DeptName, Districts.DistrictName, PostsNames.PostName, VoltageLevels.VoltageName, WorkShift.WorkShiftName, Gender.GenderName, ContractType.ContractTypeName, JobLevel.JobLevelName, Company.CompanyName, Degree.DegreeName, DegreeField.DegreeFieldName, ChartAffairs1.ChartName AS MainJobTitle, ChartAffairs2.ChartName AS CurrentActivity, StatusPresence.StatusName 
+                            FROM Personnel 
+                            LEFT JOIN Provinces ON Personnel.ProvinceID = Provinces.ProvinceID 
+                            LEFT JOIN Cities ON Personnel.CityID = Cities.CityID 
+                            LEFT JOIN TransferAffairs ON Personnel.AffairID = TransferAffairs.AffairID 
+                            LEFT JOIN OperationDepartments ON Personnel.DeptID = OperationDepartments.DeptID 
+                            LEFT JOIN Districts ON Personnel.DistrictID = Districts.DistrictID 
+                            LEFT JOIN PostsNames ON Personnel.PostNameID = PostsNames.PostNameID 
+                            LEFT JOIN VoltageLevels ON Personnel.VoltageID = VoltageLevels.VoltageID 
+                            LEFT JOIN WorkShift ON Personnel.WorkShiftID = WorkShift.WorkShiftID 
+                            LEFT JOIN Gender ON Personnel.GenderID = Gender.GenderID 
+                            LEFT JOIN ContractType ON Personnel.ContractTypeID = ContractType.ContractTypeID 
+                            LEFT JOIN JobLevel ON Personnel.JobLevelID = JobLevel.JobLevelID 
+                            LEFT JOIN Company ON Personnel.CompanyID = Company.CompanyID 
+                            LEFT JOIN Degree ON Personnel.DegreeID = Degree.DegreeID 
+                            LEFT JOIN DegreeField ON Personnel.DegreeFieldID = DegreeField.DegreeFieldID 
+                            LEFT JOIN ChartAffairs AS ChartAffairs1 ON Personnel.MainJobTitle = ChartAffairs1.ChartID 
+                            LEFT JOIN ChartAffairs AS ChartAffairs2 ON Personnel.CurrentActivity = ChartAffairs2.ChartID 
+                            LEFT JOIN StatusPresence ON Personnel.StatusID = StatusPresence.StatusID 
+                            WHERE Personnel.PersonnelID = ?";
+
+                OleDbParameter[] parameters = new OleDbParameter[]
+                {
+                    new OleDbParameter("?", personnelID)
+                };
+
+                return ExecuteQuery(query, parameters);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"خطا در دریافت اطلاعات پرسنل: {ex.Message}", "خطا", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
+        }
     }
 }
