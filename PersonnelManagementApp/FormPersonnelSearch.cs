@@ -40,9 +40,11 @@ namespace PersonnelManagementApp
         {
             this.Text = "جستجوی پرسنل";
             this.WindowState = FormWindowState.Maximized;
+            this.RightToLeft = RightToLeft.Yes;
+            this.BackColor = Color.FromArgb(240, 248, 255);
 
             // پس‌زمینه گرادیانت
-            using (LinearGradientBrush brush = new LinearGradientBrush(this.ClientRectangle, settingsManager.ButtonSearchColor, Color.White, LinearGradientMode.Vertical))
+            using (LinearGradientBrush brush = new LinearGradientBrush(this.ClientRectangle, Color.LightBlue, Color.White, LinearGradientMode.Vertical))
             {
                 this.BackgroundImage = new Bitmap(this.Width, this.Height);
                 using (Graphics g = Graphics.FromImage(this.BackgroundImage))
@@ -78,7 +80,7 @@ namespace PersonnelManagementApp
             {
                 Location = new Point(50, 360),
                 Size = new Size(300, 40),
-                Font = settingsManager.GetPrimaryFont(),
+                Font = new Font("Tahoma", 12),
                 PlaceholderText = "جستجوی آزاد (نام, نام خانوادگی, شماره پرسنلی, کد ملی)...",
                 BorderStyle = BorderStyle.None,
                 Name = "txtFreeSearch"
@@ -92,13 +94,13 @@ namespace PersonnelManagementApp
                 Text = "جستجو",
                 Location = new Point(360, 360),
                 Size = new Size(150, 40),
-                Font = settingsManager.GetButtonFont(),
-                BackColor = settingsManager.ButtonSearchColor,
+                Font = new Font("Tahoma", 12),
+                BackColor = Color.LightBlue,
                 ForeColor = Color.White,
                 Name = "btnSearch"
             };
             ApplyRoundedCorners(btnFreeSearch, 15);
-            btnFreeSearch.MouseClick += (s, e) => { if (e.Button == MouseButtons.Left) btnFreeSearch.BackColor = Color.RoyalBlue; else btnFreeSearch.BackColor = settingsManager.ButtonSearchColor; };
+            btnFreeSearch.MouseClick += (s, e) => { if (e.Button == MouseButtons.Left) btnFreeSearch.BackColor = Color.RoyalBlue; else btnFreeSearch.BackColor = Color.LightBlue; };
             RegisterThemedControl(btnFreeSearch);
 
             // جستجوی انتخابی با لیبل‌ها
@@ -107,7 +109,7 @@ namespace PersonnelManagementApp
                 Text = "استان‌ها:",
                 Location = new Point(50, 410),
                 Size = new Size(200, 30),
-                Font = settingsManager.GetPrimaryFont(),
+                Font = new Font("Tahoma", 12, FontStyle.Bold),
                 ForeColor = Color.DarkBlue,
                 Name = "lblProvinces"
             };
@@ -118,6 +120,7 @@ namespace PersonnelManagementApp
                 Location = new Point(50, 440),
                 Size = new Size(200, 150),
                 BorderStyle = BorderStyle.None,
+                Font = new Font("Tahoma", 11),
                 Name = "clbProvinces"
             };
             RegisterThemedControl(clbProvinces);
@@ -127,7 +130,7 @@ namespace PersonnelManagementApp
                 Text = "شهرها:",
                 Location = new Point(260, 410),
                 Size = new Size(200, 30),
-                Font = settingsManager.GetPrimaryFont(),
+                Font = new Font("Tahoma", 12, FontStyle.Bold),
                 ForeColor = Color.DarkBlue,
                 Name = "lblCities"
             };
@@ -138,6 +141,7 @@ namespace PersonnelManagementApp
                 Location = new Point(260, 440),
                 Size = new Size(200, 150),
                 BorderStyle = BorderStyle.None,
+                Font = new Font("Tahoma", 11),
                 Enabled = false,
                 Name = "clbCities"
             };
@@ -148,7 +152,7 @@ namespace PersonnelManagementApp
                 Text = "امور:",
                 Location = new Point(470, 410),
                 Size = new Size(200, 30),
-                Font = settingsManager.GetPrimaryFont(),
+                Font = new Font("Tahoma", 12, FontStyle.Bold),
                 ForeColor = Color.DarkBlue,
                 Name = "lblAffairs"
             };
@@ -159,6 +163,7 @@ namespace PersonnelManagementApp
                 Location = new Point(470, 440),
                 Size = new Size(200, 150),
                 BorderStyle = BorderStyle.None,
+                Font = new Font("Tahoma", 11),
                 Enabled = false,
                 Name = "clbAffairs"
             };
@@ -169,7 +174,7 @@ namespace PersonnelManagementApp
                 Text = "ادارات:",
                 Location = new Point(680, 410),
                 Size = new Size(200, 30),
-                Font = settingsManager.GetPrimaryFont(),
+                Font = new Font("Tahoma", 12, FontStyle.Bold),
                 ForeColor = Color.DarkBlue,
                 Name = "lblDepartments"
             };
@@ -180,6 +185,7 @@ namespace PersonnelManagementApp
                 Location = new Point(680, 440),
                 Size = new Size(200, 150),
                 BorderStyle = BorderStyle.None,
+                Font = new Font("Tahoma", 11),
                 Enabled = false,
                 Name = "clbDepartments"
             };
@@ -190,7 +196,7 @@ namespace PersonnelManagementApp
                 Text = "نواحی:",
                 Location = new Point(890, 410),
                 Size = new Size(200, 30),
-                Font = settingsManager.GetPrimaryFont(),
+                Font = new Font("Tahoma", 12, FontStyle.Bold),
                 ForeColor = Color.DarkBlue,
                 Name = "lblDistricts"
             };
@@ -201,6 +207,7 @@ namespace PersonnelManagementApp
                 Location = new Point(890, 440),
                 Size = new Size(200, 150),
                 BorderStyle = BorderStyle.None,
+                Font = new Font("Tahoma", 11),
                 Enabled = false,
                 Name = "clbDistricts"
             };
@@ -211,7 +218,7 @@ namespace PersonnelManagementApp
                 Text = "پست‌ها:",
                 Location = new Point(1100, 410),
                 Size = new Size(200, 30),
-                Font = settingsManager.GetPrimaryFont(),
+                Font = new Font("Tahoma", 12, FontStyle.Bold),
                 ForeColor = Color.DarkBlue,
                 Name = "lblPosts"
             };
@@ -222,6 +229,7 @@ namespace PersonnelManagementApp
                 Location = new Point(1100, 440),
                 Size = new Size(200, 150),
                 BorderStyle = BorderStyle.None,
+                Font = new Font("Tahoma", 11),
                 Enabled = false,
                 Name = "clbPosts"
             };
@@ -246,7 +254,7 @@ namespace PersonnelManagementApp
                 Text = "نمایش نتایج",
                 Location = new Point(this.ClientSize.Width - 250, 600),
                 Size = new Size(200, 50),
-                Font = settingsManager.GetButtonFont(),
+                Font = new Font("Tahoma", 12),
                 BackColor = Color.LightGreen,
                 ForeColor = Color.White,
                 Name = "btnShow"
@@ -260,13 +268,13 @@ namespace PersonnelManagementApp
                 Text = "اکسپورت به CSV",
                 Location = new Point(this.ClientSize.Width - 460, 600),
                 Size = new Size(200, 50),
-                Font = settingsManager.GetButtonFont(),
-                BackColor = settingsManager.ButtonSearchColor,
+                Font = new Font("Tahoma", 12),
+                BackColor = Color.LightBlue,
                 ForeColor = Color.White,
                 Name = "btnExport"
             };
             ApplyRoundedCorners(btnExport, 20);
-            btnExport.MouseClick += (s, e) => { if (e.Button == MouseButtons.Left) btnExport.BackColor = Color.RoyalBlue; else btnExport.BackColor = settingsManager.ButtonSearchColor; };
+            btnExport.MouseClick += (s, e) => { if (e.Button == MouseButtons.Left) btnExport.BackColor = Color.RoyalBlue; else btnExport.BackColor = Color.LightBlue; };
             RegisterThemedControl(btnExport);
 
             btnBack = new Button
@@ -274,13 +282,13 @@ namespace PersonnelManagementApp
                 Text = "برگشت به صفحه اصلی",
                 Location = new Point(50, 600),
                 Size = new Size(200, 50),
-                Font = settingsManager.GetButtonFont(),
-                BackColor = settingsManager.ButtonDeleteColor,
+                Font = new Font("Tahoma", 12),
+                BackColor = Color.LightCoral,
                 ForeColor = Color.White,
                 Name = "btnBack"
             };
             ApplyRoundedCorners(btnBack, 20);
-            btnBack.MouseClick += (s, e) => { if (e.Button == MouseButtons.Left) btnBack.BackColor = Color.Red; else btnBack.BackColor = settingsManager.ButtonDeleteColor; };
+            btnBack.MouseClick += (s, e) => { if (e.Button == MouseButtons.Left) btnBack.BackColor = Color.Red; else btnBack.BackColor = Color.LightCoral; };
             btnBack.Click += (s, e) => { this.Close(); };
             RegisterThemedControl(btnBack);
 
