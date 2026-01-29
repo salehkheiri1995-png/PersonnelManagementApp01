@@ -103,7 +103,7 @@ namespace PersonnelManagementApp
 
         private TabPage CreateFontTab()
         {
-            TabPage tab = new TabPage { Text = "\u0641ونت (Fonts)" };
+            TabPage tab = new TabPage { Text = "فونت (Fonts)" };
             int y = 15;
 
             // Primary Font
@@ -121,7 +121,7 @@ namespace PersonnelManagementApp
             y += 60;
 
             // Primary Font Size
-            tab.Controls.Add(CreateLabel(اندازه فونت اصلی (Size):", 10, y));
+            tab.Controls.Add(CreateLabel("اندازه فونت اصلی (Size):", 10, y));
             NumericUpDown nudPrimarySize = new NumericUpDown
             {
                 Location = new Point(10, y + 25),
@@ -163,7 +163,7 @@ namespace PersonnelManagementApp
             y += 60;
 
             // Button Font
-            tab.Controls.Add(CreateLabel("فونت دكمه (Button Font):", 10, y));
+            tab.Controls.Add(CreateLabel("فونت دکمه (Button Font):", 10, y));
             ComboBox cbButtonFont = new ComboBox
             {
                 Location = new Point(10, y + 25),
@@ -177,7 +177,7 @@ namespace PersonnelManagementApp
             y += 60;
 
             // Button Font Size
-            tab.Controls.Add(CreateLabel("اندازه فونت دكمه (Size):", 10, y));
+            tab.Controls.Add(CreateLabel("اندازه فونت دکمه (Size):", 10, y));
             NumericUpDown nudButtonSize = new NumericUpDown
             {
                 Location = new Point(10, y + 25),
@@ -210,8 +210,8 @@ namespace PersonnelManagementApp
             y += 60;
 
             // Secondary Color
-            tab.Controls.Add(CreateLabel("رنگ ثانوي (Secondary):", x, y));
-            Button btnSecondaryColor = CreateColorButton(settingsManager.SecondaryColor, x, y + 25, "رنگ ثانوي");
+            tab.Controls.Add(CreateLabel("رنگ ثانویه (Secondary):", x, y));
+            Button btnSecondaryColor = CreateColorButton(settingsManager.SecondaryColor, x, y + 25, "رنگ ثانویه");
             btnSecondaryColor.Click += (s, e) => {
                 selectedSecondaryColor = ChooseColor(settingsManager.SecondaryColor);
                 btnSecondaryColor.BackColor = selectedSecondaryColor;
@@ -220,8 +220,8 @@ namespace PersonnelManagementApp
             y += 60;
 
             // Background Color
-            tab.Controls.Add(CreateLabel("رنگ پسزمين (Background):", x, y));
-            Button btnBackgroundColor = CreateColorButton(settingsManager.BackgroundColor, x, y + 25, "رنگ پسزمين");
+            tab.Controls.Add(CreateLabel("رنگ پسزمینه (Background):", x, y));
+            Button btnBackgroundColor = CreateColorButton(settingsManager.BackgroundColor, x, y + 25, "رنگ پسزمینه");
             btnBackgroundColor.Click += (s, e) => {
                 selectedBackgroundColor = ChooseColor(settingsManager.BackgroundColor);
                 btnBackgroundColor.BackColor = selectedBackgroundColor;
@@ -240,7 +240,7 @@ namespace PersonnelManagementApp
 
             // Button Colors Section
             y += 80;
-            tab.Controls.Add(CreateLabel("رنگ‌های دكمه (Button Colors):", x, y, true));
+            tab.Controls.Add(CreateLabel("رنگ‌های دکمه (Button Colors):", x, y, true));
             y += 40;
 
             // Add Color
@@ -291,7 +291,7 @@ namespace PersonnelManagementApp
             int y = 15;
 
             // Button Corner Radius
-            tab.Controls.Add(CreateLabel("بررسـی گوشه دكمه (Button Corner Radius):", 10, y));
+            tab.Controls.Add(CreateLabel("بررسی گوشه دکمه (Button Corner Radius):", 10, y));
             NumericUpDown nudRadius = new NumericUpDown
             {
                 Location = new Point(10, y + 25),
@@ -309,7 +309,7 @@ namespace PersonnelManagementApp
             {
                 Location = new Point(10, y),
                 Size = new Size(300, 25),
-                Text = "طرح راستبه چپ (Right-to-Left Layout)",
+                Text = "طرح راست‌به‌چپ (Right-to-Left Layout)",
                 Checked = settingsManager.RightToLeftLayout,
                 Name = "chkRTL",
                 Font = new Font("Tahoma", 11)
@@ -322,7 +322,7 @@ namespace PersonnelManagementApp
             {
                 Location = new Point(10, y),
                 Size = new Size(300, 25),
-                Text = "حالت تاریك (Dark Mode)",
+                Text = "حالت تاریک (Dark Mode)",
                 Checked = settingsManager.EnableDarkMode,
                 Name = "chkDarkMode",
                 Font = new Font("Tahoma", 11)
@@ -352,7 +352,7 @@ namespace PersonnelManagementApp
                 Size = new Size(100, 30),
                 BackColor = color,
                 ForeColor = GetContrastColor(color),
-                Text = برابر",
+                Text = "انتخاب",
                 Name = name
             };
             ApplyRoundedCorners(btn, 8);
@@ -392,8 +392,10 @@ namespace PersonnelManagementApp
             try
             {
                 // Get font settings
-                TabPage fontTab = ((TabControl)this.Controls[0]).TabPages[0];
+                TabControl mainTab = (TabControl)this.Controls[0];
+                TabPage fontTab = mainTab.TabPages[0];
                 var fontControls = (object[])fontTab.Tag;
+                
                 settingsManager.PrimaryFont = (fontControls[0] as ComboBox).SelectedItem.ToString();
                 settingsManager.PrimaryFontSize = (int)(fontControls[1] as NumericUpDown).Value;
                 settingsManager.TitleFont = (fontControls[2] as ComboBox).SelectedItem.ToString();
@@ -415,7 +417,7 @@ namespace PersonnelManagementApp
 
         private void BtnReset_Click()
         {
-            if (MessageBox.Show("آیا مطمئن اید که ميخواهید قطعي بازتنظیم کنید?\n\nAre you sure you want to reset?",
+            if (MessageBox.Show("آیا مطمئن اید که می‌خواهید قطعی بازتنظیم کنید?\n\nAre you sure you want to reset?",
                             "تأیید", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 settingsManager.ResetToDefaults();
