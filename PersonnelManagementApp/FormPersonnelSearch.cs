@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace PersonnelManagementApp
 {
-    public partial class FormPersonnelSearch : Form
+    public partial class FormPersonnelSearch : BaseThemedForm
     {
         private DbHelper db = new DbHelper();
         private DataTable personnelTable;
@@ -40,11 +40,9 @@ namespace PersonnelManagementApp
         {
             this.Text = "جستجوی پرسنل";
             this.WindowState = FormWindowState.Maximized;
-            this.RightToLeft = RightToLeft.Yes;
-            this.BackColor = Color.FromArgb(240, 248, 255);
 
             // پس‌زمینه گرادیانت
-            using (LinearGradientBrush brush = new LinearGradientBrush(this.ClientRectangle, Color.LightBlue, Color.White, LinearGradientMode.Vertical))
+            using (LinearGradientBrush brush = new LinearGradientBrush(this.ClientRectangle, settingsManager.ButtonSearchColor, Color.White, LinearGradientMode.Vertical))
             {
                 this.BackgroundImage = new Bitmap(this.Width, this.Height);
                 using (Graphics g = Graphics.FromImage(this.BackgroundImage))
@@ -59,8 +57,8 @@ namespace PersonnelManagementApp
                 Name = "dgvResults",
                 Location = new Point(50, 50),
                 Size = new Size(this.ClientSize.Width - 100, 300),
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None, // غیرفعال کردن AutoSize برای اسکرول افقی
-                ScrollBars = ScrollBars.Both, // فعال کردن اسکرول افقی و عمودی
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None,
+                ScrollBars = ScrollBars.Both,
                 AllowUserToAddRows = false,
                 ReadOnly = true,
                 BackgroundColor = Color.White,
@@ -73,29 +71,35 @@ namespace PersonnelManagementApp
             };
             ApplyRoundedCorners(dgvResults, 20);
             dgvResults.MouseClick += (s, e) => { if (e.Button == MouseButtons.Left) dgvResults.BackColor = Color.LightYellow; else dgvResults.BackColor = Color.White; };
+            RegisterThemedControl(dgvResults);
 
             // جستجوی آزاد
             txtFreeSearch = new TextBox
             {
                 Location = new Point(50, 360),
                 Size = new Size(300, 40),
-                Font = new Font("Tahoma", 12),
-                PlaceholderText = "جستجوی آزاد (نام، نام خانوادگی، شماره پرسنلی، کد ملی)...",
-                BorderStyle = BorderStyle.None
+                Font = settingsManager.GetPrimaryFont(),
+                PlaceholderText = "جستجوی آزاد (نام, نام خانوادگی, شماره پرسنلی, کد ملی)...",
+                BorderStyle = BorderStyle.None,
+                Name = "txtFreeSearch"
             };
             ApplyRoundedCorners(txtFreeSearch, 15);
             txtFreeSearch.BackColor = Color.WhiteSmoke;
+            RegisterThemedControl(txtFreeSearch);
+
             btnFreeSearch = new Button
             {
                 Text = "جستجو",
                 Location = new Point(360, 360),
                 Size = new Size(150, 40),
-                Font = new Font("Tahoma", 12),
-                BackColor = Color.LightBlue,
-                ForeColor = Color.White
+                Font = settingsManager.GetButtonFont(),
+                BackColor = settingsManager.ButtonSearchColor,
+                ForeColor = Color.White,
+                Name = "btnSearch"
             };
             ApplyRoundedCorners(btnFreeSearch, 15);
-            btnFreeSearch.MouseClick += (s, e) => { if (e.Button == MouseButtons.Left) btnFreeSearch.BackColor = Color.RoyalBlue; else btnFreeSearch.BackColor = Color.LightBlue; };
+            btnFreeSearch.MouseClick += (s, e) => { if (e.Button == MouseButtons.Left) btnFreeSearch.BackColor = Color.RoyalBlue; else btnFreeSearch.BackColor = settingsManager.ButtonSearchColor; };
+            RegisterThemedControl(btnFreeSearch);
 
             // جستجوی انتخابی با لیبل‌ها
             Label lblProvinces = new Label
@@ -103,55 +107,125 @@ namespace PersonnelManagementApp
                 Text = "استان‌ها:",
                 Location = new Point(50, 410),
                 Size = new Size(200, 30),
-                Font = new Font("Tahoma", 12, FontStyle.Bold),
-                ForeColor = Color.DarkBlue
+                Font = settingsManager.GetPrimaryFont(),
+                ForeColor = Color.DarkBlue,
+                Name = "lblProvinces"
             };
-            clbProvinces = new CheckedListBox { Location = new Point(50, 440), Size = new Size(200, 150), BorderStyle = BorderStyle.None };
+            RegisterThemedControl(lblProvinces);
+
+            clbProvinces = new CheckedListBox
+            {
+                Location = new Point(50, 440),
+                Size = new Size(200, 150),
+                BorderStyle = BorderStyle.None,
+                Name = "clbProvinces"
+            };
+            RegisterThemedControl(clbProvinces);
+
             Label lblCities = new Label
             {
                 Text = "شهرها:",
                 Location = new Point(260, 410),
                 Size = new Size(200, 30),
-                Font = new Font("Tahoma", 12, FontStyle.Bold),
-                ForeColor = Color.DarkBlue
+                Font = settingsManager.GetPrimaryFont(),
+                ForeColor = Color.DarkBlue,
+                Name = "lblCities"
             };
-            clbCities = new CheckedListBox { Location = new Point(260, 440), Size = new Size(200, 150), BorderStyle = BorderStyle.None, Enabled = false };
+            RegisterThemedControl(lblCities);
+
+            clbCities = new CheckedListBox
+            {
+                Location = new Point(260, 440),
+                Size = new Size(200, 150),
+                BorderStyle = BorderStyle.None,
+                Enabled = false,
+                Name = "clbCities"
+            };
+            RegisterThemedControl(clbCities);
+
             Label lblAffairs = new Label
             {
                 Text = "امور:",
                 Location = new Point(470, 410),
                 Size = new Size(200, 30),
-                Font = new Font("Tahoma", 12, FontStyle.Bold),
-                ForeColor = Color.DarkBlue
+                Font = settingsManager.GetPrimaryFont(),
+                ForeColor = Color.DarkBlue,
+                Name = "lblAffairs"
             };
-            clbAffairs = new CheckedListBox { Location = new Point(470, 440), Size = new Size(200, 150), BorderStyle = BorderStyle.None, Enabled = false };
+            RegisterThemedControl(lblAffairs);
+
+            clbAffairs = new CheckedListBox
+            {
+                Location = new Point(470, 440),
+                Size = new Size(200, 150),
+                BorderStyle = BorderStyle.None,
+                Enabled = false,
+                Name = "clbAffairs"
+            };
+            RegisterThemedControl(clbAffairs);
+
             Label lblDepartments = new Label
             {
                 Text = "ادارات:",
                 Location = new Point(680, 410),
                 Size = new Size(200, 30),
-                Font = new Font("Tahoma", 12, FontStyle.Bold),
-                ForeColor = Color.DarkBlue
+                Font = settingsManager.GetPrimaryFont(),
+                ForeColor = Color.DarkBlue,
+                Name = "lblDepartments"
             };
-            clbDepartments = new CheckedListBox { Location = new Point(680, 440), Size = new Size(200, 150), BorderStyle = BorderStyle.None, Enabled = false };
+            RegisterThemedControl(lblDepartments);
+
+            clbDepartments = new CheckedListBox
+            {
+                Location = new Point(680, 440),
+                Size = new Size(200, 150),
+                BorderStyle = BorderStyle.None,
+                Enabled = false,
+                Name = "clbDepartments"
+            };
+            RegisterThemedControl(clbDepartments);
+
             Label lblDistricts = new Label
             {
                 Text = "نواحی:",
                 Location = new Point(890, 410),
                 Size = new Size(200, 30),
-                Font = new Font("Tahoma", 12, FontStyle.Bold),
-                ForeColor = Color.DarkBlue
+                Font = settingsManager.GetPrimaryFont(),
+                ForeColor = Color.DarkBlue,
+                Name = "lblDistricts"
             };
-            clbDistricts = new CheckedListBox { Location = new Point(890, 440), Size = new Size(200, 150), BorderStyle = BorderStyle.None, Enabled = false };
+            RegisterThemedControl(lblDistricts);
+
+            clbDistricts = new CheckedListBox
+            {
+                Location = new Point(890, 440),
+                Size = new Size(200, 150),
+                BorderStyle = BorderStyle.None,
+                Enabled = false,
+                Name = "clbDistricts"
+            };
+            RegisterThemedControl(clbDistricts);
+
             Label lblPosts = new Label
             {
                 Text = "پست‌ها:",
                 Location = new Point(1100, 410),
                 Size = new Size(200, 30),
-                Font = new Font("Tahoma", 12, FontStyle.Bold),
-                ForeColor = Color.DarkBlue
+                Font = settingsManager.GetPrimaryFont(),
+                ForeColor = Color.DarkBlue,
+                Name = "lblPosts"
             };
-            clbPosts = new CheckedListBox { Location = new Point(1100, 440), Size = new Size(200, 150), BorderStyle = BorderStyle.None, Enabled = false };
+            RegisterThemedControl(lblPosts);
+
+            clbPosts = new CheckedListBox
+            {
+                Location = new Point(1100, 440),
+                Size = new Size(200, 150),
+                BorderStyle = BorderStyle.None,
+                Enabled = false,
+                Name = "clbPosts"
+            };
+            RegisterThemedControl(clbPosts);
 
             ApplyRoundedCorners(clbProvinces, 15);
             ApplyRoundedCorners(clbCities, 15);
@@ -172,37 +246,43 @@ namespace PersonnelManagementApp
                 Text = "نمایش نتایج",
                 Location = new Point(this.ClientSize.Width - 250, 600),
                 Size = new Size(200, 50),
-                Font = new Font("Tahoma", 12),
+                Font = settingsManager.GetButtonFont(),
                 BackColor = Color.LightGreen,
-                ForeColor = Color.White
+                ForeColor = Color.White,
+                Name = "btnShow"
             };
             ApplyRoundedCorners(btnShow, 20);
             btnShow.MouseClick += (s, e) => { if (e.Button == MouseButtons.Left) btnShow.BackColor = Color.ForestGreen; else btnShow.BackColor = Color.LightGreen; };
+            RegisterThemedControl(btnShow);
 
             btnExport = new Button
             {
                 Text = "اکسپورت به CSV",
                 Location = new Point(this.ClientSize.Width - 460, 600),
                 Size = new Size(200, 50),
-                Font = new Font("Tahoma", 12),
-                BackColor = Color.LightBlue,
-                ForeColor = Color.White
+                Font = settingsManager.GetButtonFont(),
+                BackColor = settingsManager.ButtonSearchColor,
+                ForeColor = Color.White,
+                Name = "btnExport"
             };
             ApplyRoundedCorners(btnExport, 20);
-            btnExport.MouseClick += (s, e) => { if (e.Button == MouseButtons.Left) btnExport.BackColor = Color.RoyalBlue; else btnExport.BackColor = Color.LightBlue; };
+            btnExport.MouseClick += (s, e) => { if (e.Button == MouseButtons.Left) btnExport.BackColor = Color.RoyalBlue; else btnExport.BackColor = settingsManager.ButtonSearchColor; };
+            RegisterThemedControl(btnExport);
 
             btnBack = new Button
             {
                 Text = "برگشت به صفحه اصلی",
                 Location = new Point(50, 600),
                 Size = new Size(200, 50),
-                Font = new Font("Tahoma", 12),
-                BackColor = Color.LightCoral,
-                ForeColor = Color.White
+                Font = settingsManager.GetButtonFont(),
+                BackColor = settingsManager.ButtonDeleteColor,
+                ForeColor = Color.White,
+                Name = "btnBack"
             };
             ApplyRoundedCorners(btnBack, 20);
-            btnBack.MouseClick += (s, e) => { if (e.Button == MouseButtons.Left) btnBack.BackColor = Color.Red; else btnBack.BackColor = Color.LightCoral; };
+            btnBack.MouseClick += (s, e) => { if (e.Button == MouseButtons.Left) btnBack.BackColor = Color.Red; else btnBack.BackColor = settingsManager.ButtonDeleteColor; };
             btnBack.Click += (s, e) => { this.Close(); };
+            RegisterThemedControl(btnBack);
 
             this.Controls.Add(dgvResults);
             this.Controls.Add(txtFreeSearch);
@@ -233,27 +313,16 @@ namespace PersonnelManagementApp
             clbDistricts.ItemCheck += ClbDistricts_ItemCheck;
         }
 
-        private void ApplyRoundedCorners(Control control, int radius)
-        {
-            GraphicsPath path = new GraphicsPath();
-            path.AddArc(0, 0, radius, radius, 180, 90);
-            path.AddArc(control.Width - radius, 0, radius, radius, 270, 90);
-            path.AddArc(control.Width - radius, control.Height - radius, radius, radius, 0, 90);
-            path.AddArc(0, control.Height - radius, radius, radius, 90, 90);
-            path.CloseFigure();
-            control.Region = new Region(path);
-        }
-
         private void LoadData()
         {
             try
             {
                 provincesTable = db.GetProvinces();
-                citiesTable = db.GetCitiesByProvince(0); // دریافت همه شهرها
-                transferAffairsTable = db.GetAffairsByProvince(0); // دریافت همه امور
-                operationDepartmentsTable = db.GetDeptsByAffair(0); // دریافت همه ادارات
-                districtsTable = db.GetDistrictsByDept(0); // دریافت همه نواحی
-                postsNamesTable = db.GetPostNamesByDistrict(0); // دریافت همه نام‌های پست
+                citiesTable = db.GetCitiesByProvince(0);
+                transferAffairsTable = db.GetAffairsByProvince(0);
+                operationDepartmentsTable = db.GetDeptsByAffair(0);
+                districtsTable = db.GetDistrictsByDept(0);
+                postsNamesTable = db.GetPostNamesByDistrict(0);
                 personnelTable = db.ExecuteQuery("SELECT PersonnelID, ProvinceID, CityID, AffairID, DeptID, DistrictID, PostNameID, VoltageID, " +
                                                 "WorkShiftID, GenderID, FirstName, LastName, FatherName, PersonnelNumber, NationalID, " +
                                                 "MobileNumber, BirthDate, HireDate, StartDateOperation, ContractTypeID, JobLevelID, " +
@@ -464,14 +533,12 @@ namespace PersonnelManagementApp
         {
             this.BeginInvoke((MethodInvoker)delegate
             {
-                // پاک کردن آیتم‌های وابسته
                 clbCities.Items.Clear();
                 clbAffairs.Items.Clear();
                 clbDepartments.Items.Clear();
                 clbDistricts.Items.Clear();
                 clbPosts.Items.Clear();
 
-                // فعال کردن شهرها و امور
                 bool hasSelectedProvinces = clbProvinces.CheckedItems.Count > 0 || e.NewValue == CheckState.Checked;
                 clbCities.Enabled = hasSelectedProvinces;
                 clbAffairs.Enabled = hasSelectedProvinces;
@@ -487,7 +554,6 @@ namespace PersonnelManagementApp
                     else
                         selectedProvinces.Remove(clbProvinces.Items[e.Index].ToString());
 
-                    // بارگذاری شهرها
                     var cities = searchTablePersonnel.AsEnumerable()
                         .Where(r => selectedProvinces.Contains(r["استان"].ToString()))
                         .Select(r => r["شهر"].ToString())
@@ -496,7 +562,6 @@ namespace PersonnelManagementApp
                     foreach (var city in cities)
                         clbCities.Items.Add(city, false);
 
-                    // بارگذاری امور
                     var affairs = searchTablePersonnel.AsEnumerable()
                         .Where(r => selectedProvinces.Contains(r["استان"].ToString()))
                         .Select(r => r["امور"].ToString())
@@ -512,12 +577,10 @@ namespace PersonnelManagementApp
         {
             this.BeginInvoke((MethodInvoker)delegate
             {
-                // پاک کردن آیتم‌های وابسته
                 clbDepartments.Items.Clear();
                 clbDistricts.Items.Clear();
                 clbPosts.Items.Clear();
 
-                // فعال کردن ادارات فقط اگر شهر یا امور انتخاب شده باشد
                 bool hasSelectedCities = clbCities.CheckedItems.Count > 0 || e.NewValue == CheckState.Checked;
                 bool hasSelectedAffairs = clbAffairs.CheckedItems.Count > 0;
                 clbDepartments.Enabled = hasSelectedCities || hasSelectedAffairs;
@@ -534,7 +597,6 @@ namespace PersonnelManagementApp
                     else
                         selectedCities.Remove(clbCities.Items[e.Index].ToString());
 
-                    // بارگذاری ادارات با در نظر گرفتن شهرها و امور انتخاب‌شده
                     var depts = searchTablePersonnel.AsEnumerable()
                         .Where(r => selectedProvinces.Contains(r["استان"].ToString()) &&
                                     (selectedCities.Count == 0 || selectedCities.Contains(r["شهر"].ToString())) &&
@@ -552,12 +614,10 @@ namespace PersonnelManagementApp
         {
             this.BeginInvoke((MethodInvoker)delegate
             {
-                // پاک کردن آیتم‌های وابسته
                 clbDepartments.Items.Clear();
                 clbDistricts.Items.Clear();
                 clbPosts.Items.Clear();
 
-                // فعال کردن ادارات فقط اگر شهر یا امور انتخاب شده باشد
                 bool hasSelectedCities = clbCities.CheckedItems.Count > 0;
                 bool hasSelectedAffairs = clbAffairs.CheckedItems.Count > 0 || e.NewValue == CheckState.Checked;
                 clbDepartments.Enabled = hasSelectedCities || hasSelectedAffairs;
@@ -574,7 +634,6 @@ namespace PersonnelManagementApp
                     else
                         selectedAffairs.Remove(clbAffairs.Items[e.Index].ToString());
 
-                    // بارگذاری ادارات با در نظر گرفتن شهرها و امور انتخاب‌شده
                     var depts = searchTablePersonnel.AsEnumerable()
                         .Where(r => selectedProvinces.Contains(r["استان"].ToString()) &&
                                     (selectedCities.Count == 0 || selectedCities.Contains(r["شهر"].ToString())) &&
@@ -592,11 +651,9 @@ namespace PersonnelManagementApp
         {
             this.BeginInvoke((MethodInvoker)delegate
             {
-                // پاک کردن آیتم‌های وابسته
                 clbDistricts.Items.Clear();
                 clbPosts.Items.Clear();
 
-                // فعال کردن نواحی
                 bool hasSelectedDepartments = clbDepartments.CheckedItems.Count > 0 || e.NewValue == CheckState.Checked;
                 clbDistricts.Enabled = hasSelectedDepartments;
                 clbPosts.Enabled = false;
@@ -612,7 +669,6 @@ namespace PersonnelManagementApp
                     else
                         selectedDepts.Remove(clbDepartments.Items[e.Index].ToString());
 
-                    // بارگذاری نواحی
                     var districts = searchTablePersonnel.AsEnumerable()
                         .Where(r => selectedProvinces.Contains(r["استان"].ToString()) &&
                                     (selectedCities.Count == 0 || selectedCities.Contains(r["شهر"].ToString())) &&
@@ -631,10 +687,8 @@ namespace PersonnelManagementApp
         {
             this.BeginInvoke((MethodInvoker)delegate
             {
-                // پاک کردن آیتم‌های وابسته
                 clbPosts.Items.Clear();
 
-                // فعال کردن پست‌ها
                 bool hasSelectedDistricts = clbDistricts.CheckedItems.Count > 0 || e.NewValue == CheckState.Checked;
                 clbPosts.Enabled = hasSelectedDistricts;
 
@@ -650,7 +704,6 @@ namespace PersonnelManagementApp
                     else
                         selectedDistricts.Remove(clbDistricts.Items[e.Index].ToString());
 
-                    // بارگذاری پست‌ها
                     var posts = searchTablePersonnel.AsEnumerable()
                         .Where(r => selectedProvinces.Contains(r["استان"].ToString()) &&
                                     (selectedCities.Count == 0 || selectedCities.Contains(r["شهر"].ToString())) &&
@@ -686,7 +739,7 @@ namespace PersonnelManagementApp
                 dgvResults.DataSource = filteredTable;
                 foreach (DataGridViewColumn column in dgvResults.Columns)
                 {
-                    column.Width = 150; // عرض ثابت برای ایجاد اسکرول افقی
+                    column.Width = 150;
                     column.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
                 }
             }
@@ -729,7 +782,7 @@ namespace PersonnelManagementApp
                 dgvResults.DataSource = filteredTable;
                 foreach (DataGridViewColumn column in dgvResults.Columns)
                 {
-                    column.Width = 150; // عرض ثابت برای ایجاد اسکرول افقی
+                    column.Width = 150;
                     column.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
                 }
             }
