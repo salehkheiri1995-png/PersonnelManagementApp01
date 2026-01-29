@@ -11,7 +11,7 @@ namespace PersonnelManagementApp
 
         public MainForm()
         {
-            settingsManager = new SettingsManager();
+            settingsManager = SettingsManager.Instance;
             InitializeComponent();
         }
 
@@ -55,7 +55,8 @@ namespace PersonnelManagementApp
                 Size = new Size(300, 50),
                 Font = settingsManager.GetButtonFont(FontStyle.Bold),
                 BackColor = settingsManager.ButtonAddColor,
-                ForeColor = Color.White
+                ForeColor = Color.White,
+                Name = "btnAdd"
             };
             ApplyRoundedCorners(btnAdd, settingsManager.ButtonCornerRadius);
             btnAdd.Click += (s, e) => new FormPersonnelRegister().ShowDialog();
@@ -69,7 +70,8 @@ namespace PersonnelManagementApp
                 Size = new Size(300, 50),
                 Font = settingsManager.GetButtonFont(FontStyle.Bold),
                 BackColor = settingsManager.ButtonEditColor,
-                ForeColor = Color.White
+                ForeColor = Color.White,
+                Name = "btnEdit"
             };
             ApplyRoundedCorners(btnEdit, settingsManager.ButtonCornerRadius);
             btnEdit.Click += (s, e) => new FormPersonnelEdit().ShowDialog();
@@ -83,7 +85,8 @@ namespace PersonnelManagementApp
                 Size = new Size(300, 50),
                 Font = settingsManager.GetButtonFont(FontStyle.Bold),
                 BackColor = settingsManager.ButtonDeleteColor,
-                ForeColor = Color.White
+                ForeColor = Color.White,
+                Name = "btnDelete"
             };
             ApplyRoundedCorners(btnDelete, settingsManager.ButtonCornerRadius);
             btnDelete.Click += (s, e) => new FormPersonnelDelete().ShowDialog();
@@ -97,7 +100,8 @@ namespace PersonnelManagementApp
                 Size = new Size(300, 50),
                 Font = settingsManager.GetButtonFont(FontStyle.Bold),
                 BackColor = settingsManager.ButtonSearchColor,
-                ForeColor = Color.White
+                ForeColor = Color.White,
+                Name = "btnSearch"
             };
             ApplyRoundedCorners(btnSearch, settingsManager.ButtonCornerRadius);
             btnSearch.Click += (s, e) => new FormPersonnelSearch().ShowDialog();
@@ -111,7 +115,8 @@ namespace PersonnelManagementApp
                 Size = new Size(300, 50),
                 Font = settingsManager.GetButtonFont(FontStyle.Bold),
                 BackColor = settingsManager.ButtonAnalyticsColor,
-                ForeColor = Color.White
+                ForeColor = Color.White,
+                Name = "btnAnalytics"
             };
             ApplyRoundedCorners(btnAnalytics, settingsManager.ButtonCornerRadius);
             btnAnalytics.Click += (s, e) => new FormPersonnelAnalytics().ShowDialog();
@@ -125,12 +130,13 @@ namespace PersonnelManagementApp
                 Size = new Size(300, 50),
                 Font = settingsManager.GetButtonFont(FontStyle.Bold),
                 BackColor = settingsManager.ButtonSettingsColor,
-                ForeColor = Color.White
+                ForeColor = Color.White,
+                Name = "btnSettings"
             };
             ApplyRoundedCorners(btnSettings, settingsManager.ButtonCornerRadius);
             btnSettings.Click += (s, e) => 
             {
-                FormSettings settingsForm = new FormSettings(settingsManager);
+                FormSettings settingsForm = new FormSettings();
                 settingsForm.ShowDialog();
             };
             this.Controls.Add(btnSettings);
@@ -143,7 +149,8 @@ namespace PersonnelManagementApp
                 Size = new Size(300, 50),
                 Font = settingsManager.GetButtonFont(FontStyle.Bold),
                 BackColor = Color.Gray,
-                ForeColor = Color.White
+                ForeColor = Color.White,
+                Name = "btnExit"
             };
             ApplyRoundedCorners(btnExit, settingsManager.ButtonCornerRadius);
             btnExit.Click += (s, e) => Application.Exit();
