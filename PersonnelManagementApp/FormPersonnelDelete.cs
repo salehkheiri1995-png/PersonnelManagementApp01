@@ -91,7 +91,7 @@ namespace PersonnelManagementApp
             ApplyRoundedCorners(btnDelete, 10);
             RegisterThemedControl(btnDelete);
 
-            // دکمه حذف برابر برای رابطه ای موجود
+            // دکمه حذف جرئه‌انه برای رابطه ای موجود
             Button btnDeleteWithReferences = new Button
             {
                 Text = "حذف حذاقانه",
@@ -213,7 +213,7 @@ namespace PersonnelManagementApp
             }
 
             string personnelName = cbPersonnel.SelectedItem.ToString();
-            if (MessageBox.Show($"آیا مطمئن هستید که می‌خواهید \"{ personnelName }\" و تمام رابطه‌های مربوط را حذف کنید?\n\nاین کار برگشتناپذیر نیست!", "تأیید حذف حذاقانه", MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes)
+            if (MessageBox.Show($"آیا مطمئن هستید که می‌خواهید \"{ personnelName }\" و تمام رابطه‌های مربوط را حذف کنید?\n\nاین کار برگشتناپذیر نیست!", "تأیید حذف جرئه‌انه", MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes)
             {
                 DeletePersonnel(false);
             }
@@ -227,6 +227,21 @@ namespace PersonnelManagementApp
             try
             {
                 int personnelId = (int)cbPersonnel.SelectedValue;
+                string firstName = "", lastName = "";
+
+                // گرفتن نام برای رویداد
+                DataTable dtName = db.ExecuteQuery("SELECT FirstName, LastName FROM Personnel WHERE PersonnelID = ?",
+                    new OleDbParameter[]
+                    {
+                        new OleDbParameter("?", personnelId)
+                    });
+
+                if (dtName.Rows.Count > 0)
+                {
+                    firstName = dtName.Rows[0]["FirstName"].ToString();
+                    lastName = dtName.Rows[0]["LastName"].ToString();
+                }
+
                 string query = "DELETE FROM Personnel WHERE PersonnelID = ?";
                 OleDbParameter[] parameters = new OleDbParameter[]
                 {
@@ -237,6 +252,10 @@ namespace PersonnelManagementApp
                 if (rowsAffected > 0)
                 {
                     MessageBox.Show("پرسنل با موفقیت حذف شد!", "موفقیت", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    
+                    // فراخوانی رویدادِ حذف برای آپدیت کل نمودارها
+                    DataChangeNotifier.NotifyPersonnelDeleted(personnelId, firstName, lastName);
+                    
                     LoadPersonnelList();
                     dgvPersonnelInfo.DataSource = null;
                 }
