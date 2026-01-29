@@ -34,6 +34,13 @@ namespace PersonnelManagementApp
             LoadOtherCombos();
         }
 
+        // Constructor جدید برای دریافت personnelID
+        public FormPersonnelEdit(int personnelID) : this()
+        {
+            txtPersonnelID.Text = personnelID.ToString();
+            BtnLoad_Click(null, EventArgs.Empty);
+        }
+
         private void InitializeComponent()
         {
             this.Text = "ویرایش پرسنل";
