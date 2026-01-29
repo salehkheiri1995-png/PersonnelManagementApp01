@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace PersonnelManagementApp
 {
-    public partial class FormPersonnelDelete : Form
+    public partial class FormPersonnelDelete : BaseThemedForm
     {
         private DbHelper db = new DbHelper();
         private ComboBox cbPersonnel;
@@ -21,12 +21,10 @@ namespace PersonnelManagementApp
         {
             this.Text = "حذف پرسنل";
             this.WindowState = FormWindowState.Normal;
-            this.RightToLeft = RightToLeft.Yes;
-            this.BackColor = Color.FromArgb(240, 248, 255);
             this.Size = new Size(400, 200);
 
             // پس‌زمینه گرادیانت
-            using (LinearGradientBrush brush = new LinearGradientBrush(this.ClientRectangle, Color.LightBlue, Color.White, LinearGradientMode.Vertical))
+            using (LinearGradientBrush brush = new LinearGradientBrush(this.ClientRectangle, settingsManager.ButtonDeleteColor, Color.White, LinearGradientMode.Vertical))
             {
                 this.BackgroundImage = new Bitmap(this.Width, this.Height);
                 using (Graphics g = Graphics.FromImage(this.BackgroundImage))
@@ -36,8 +34,24 @@ namespace PersonnelManagementApp
             }
 
             // انتخاب پرسنل
-            Label lblPersonnel = new Label { Text = "انتخاب پرسنل:", Location = new Point(50, 50), Size = new Size(100, 20), Font = new Font("Tahoma", 10) };
-            cbPersonnel = new ComboBox { Location = new Point(160, 50), Size = new Size(200, 20), DropDownStyle = ComboBoxStyle.DropDownList };
+            Label lblPersonnel = new Label
+            {
+                Text = "انتخاب پرسنل:",
+                Location = new Point(50, 50),
+                Size = new Size(100, 20),
+                Font = settingsManager.GetPrimaryFont(),
+                ForeColor = settingsManager.TextColor
+            };
+            RegisterThemedControl(lblPersonnel);
+
+            cbPersonnel = new ComboBox
+            {
+                Location = new Point(160, 50),
+                Size = new Size(200, 20),
+                DropDownStyle = ComboBoxStyle.DropDownList,
+                Name = "cbPersonnel"
+            };
+            RegisterThemedControl(cbPersonnel);
 
             // دکمه حذف
             Button btnDelete = new Button
@@ -45,11 +59,14 @@ namespace PersonnelManagementApp
                 Text = "حذف",
                 Location = new Point(160, 100),
                 Size = new Size(100, 30),
-                Font = new Font("Tahoma", 10),
-                BackColor = Color.LightCoral,
-                ForeColor = Color.White
+                Font = settingsManager.GetButtonFont(),
+                BackColor = settingsManager.ButtonDeleteColor,
+                ForeColor = Color.White,
+                Name = "btnDelete"
             };
             btnDelete.Click += BtnDelete_Click;
+            ApplyRoundedCorners(btnDelete, settingsManager.ButtonCornerRadius);
+            RegisterThemedControl(btnDelete);
 
             // دکمه بازگشت
             Button btnBack = new Button
@@ -57,11 +74,14 @@ namespace PersonnelManagementApp
                 Text = "بازگشت",
                 Location = new Point(270, 100),
                 Size = new Size(100, 30),
-                Font = new Font("Tahoma", 10),
+                Font = settingsManager.GetButtonFont(),
                 BackColor = Color.LightGray,
-                ForeColor = Color.Black
+                ForeColor = Color.Black,
+                Name = "btnCancel"
             };
             btnBack.Click += (s, e) => { this.Close(); };
+            ApplyRoundedCorners(btnBack, settingsManager.ButtonCornerRadius);
+            RegisterThemedControl(btnBack);
 
             this.Controls.Add(lblPersonnel);
             this.Controls.Add(cbPersonnel);
@@ -82,7 +102,7 @@ namespace PersonnelManagementApp
         {
             if (cbPersonnel.SelectedIndex >= 0)
             {
-                if (MessageBox.Show("آیا مطمئن هستید که می‌خواهید این پرسنل را حذف کنید؟", "تأیید حذف", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                if (MessageBox.Show("آیا مطمئن هستید که می‌خواهید این پرسنل را حذف کنید?", "تأیید حذف", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
                     try
                     {
