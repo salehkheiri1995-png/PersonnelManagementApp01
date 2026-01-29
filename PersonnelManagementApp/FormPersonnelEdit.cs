@@ -67,7 +67,6 @@ namespace PersonnelManagementApp
             int totalControlWidth = labelWidth + controlWidth + 10;
             int margin = 20;
             int columnWidth = (formWidth - 3 * margin) / 2;
-            float labelFontSize = 13f; // افزایش اندازه فونت لیبل‌ها
 
             // موقعیت پایه برای ستون سمت راست
             int baseXRight = formWidth - margin - columnWidth;
@@ -85,7 +84,7 @@ namespace PersonnelManagementApp
                 Text = "ویرایش اطلاعات پرسنل",
                 Location = new Point((formWidth - 400) / 2, yHeader),
                 Size = new Size(400, 50),
-                Font = new Font("Tahoma", 18, FontStyle.Bold),
+                Font = new Font(SettingsManager.Instance.PrimaryFont, 18, FontStyle.Bold),
                 ForeColor = Color.Navy,
                 TextAlign = ContentAlignment.MiddleCenter
             };
@@ -93,9 +92,9 @@ namespace PersonnelManagementApp
             yHeader += 60;
 
             // TextBox برای PersonnelID
-            Label lblPersonnelID = new Label { Text = "شناسه پرسنل:", Location = new Point((formWidth - labelWidth) / 2 + controlWidth + 95, ySearch), Size = new Size(labelWidth, 30), Font = new Font("Tahoma", labelFontSize) };
-            txtPersonnelID = new TextBox { Location = new Point((formWidth - controlWidth) / 2, ySearch), Size = new Size(controlWidth, controlHeight), Font = new Font("Tahoma", 12) };
-            Button btnLoad = new Button { Text = "بارگذاری", Location = new Point((formWidth - controlWidth) / 2 + controlWidth + 20, ySearch - 5), Size = new Size(100, controlHeight), Font = new Font("Tahoma", 12), BackColor = Color.LightGreen, ForeColor = Color.White };
+            Label lblPersonnelID = new Label { Text = "شناسه پرسنل:", Location = new Point((formWidth - labelWidth) / 2 + controlWidth + 95, ySearch), Size = new Size(labelWidth, 30), Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
+            txtPersonnelID = new TextBox { Location = new Point((formWidth - controlWidth) / 2, ySearch), Size = new Size(controlWidth, controlHeight), Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
+            Button btnLoad = new Button { Text = "بارگذاری", Location = new Point((formWidth - controlWidth) / 2 + controlWidth + 20, ySearch - 5), Size = new Size(100, controlHeight), Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize), BackColor = Color.LightGreen, ForeColor = Color.White };
             btnLoad.Click += BtnLoad_Click;
             ApplyRoundedCorners(txtPersonnelID, 10);
             ApplyRoundedCorners(btnLoad, 15);
@@ -106,9 +105,9 @@ namespace PersonnelManagementApp
             ySearch += yStep;
 
             // جستجوی آزاد
-            Label lblFreeSearch = new Label { Text = "جستجوی آزاد:", Location = new Point((formWidth - labelWidth) / 2 + controlWidth + 95, ySearch), Size = new Size(labelWidth, 30), Font = new Font("Tahoma", labelFontSize) };
-            txtFreeSearch = new TextBox { Location = new Point((formWidth - controlWidth) / 2, ySearch), Size = new Size(controlWidth, controlHeight), Font = new Font("Tahoma", 12), PlaceholderText = "جستجوی پرسنل..." };
-            Button btnSearch = new Button { Text = "جستجو", Location = new Point((formWidth - controlWidth) / 2 + controlWidth + 20, ySearch - 5), Size = new Size(100, controlHeight), Font = new Font("Tahoma", 12), BackColor = Color.LightGreen, ForeColor = Color.White };
+            Label lblFreeSearch = new Label { Text = "جستجوی آزاد:", Location = new Point((formWidth - labelWidth) / 2 + controlWidth + 95, ySearch), Size = new Size(labelWidth, 30), Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
+            txtFreeSearch = new TextBox { Location = new Point((formWidth - controlWidth) / 2, ySearch), Size = new Size(controlWidth, controlHeight), Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize), PlaceholderText = "جستجوی پرسنل..." };
+            Button btnSearch = new Button { Text = "جستجو", Location = new Point((formWidth - controlWidth) / 2 + controlWidth + 20, ySearch - 5), Size = new Size(100, controlHeight), Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize), BackColor = Color.LightGreen, ForeColor = Color.White };
             btnSearch.Click += BtnSearch_Click;
             ApplyRoundedCorners(txtFreeSearch, 10);
             ApplyRoundedCorners(btnSearch, 15);
@@ -138,8 +137,8 @@ namespace PersonnelManagementApp
 
             // *** ستون سمت راست: فیلدهای 1 تا 13 ***
             // ComboBox برای استان
-            Label lblProvince = new Label { Text = "استان:", Location = new Point(xLabelRight, yRight), Size = new Size(labelWidth, 30), Font = new Font("Tahoma", labelFontSize) };
-            cmbProvince = new ComboBox { Location = new Point(xControlRight, yRight), Size = new Size(controlWidth, controlHeight), DropDownStyle = ComboBoxStyle.DropDownList, Font = new Font("Tahoma", 12) };
+            Label lblProvince = new Label { Text = "استان:", Location = new Point(xLabelRight, yRight), Size = new Size(labelWidth, 30), Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
+            cmbProvince = new ComboBox { Location = new Point(xControlRight, yRight), Size = new Size(controlWidth, controlHeight), DropDownStyle = ComboBoxStyle.DropDownList, Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
             cmbProvince.SelectedIndexChanged += CmbProvince_SelectedIndexChanged;
             ApplyRoundedCorners(cmbProvince, 10);
             this.Controls.Add(lblProvince);
@@ -147,16 +146,16 @@ namespace PersonnelManagementApp
             yRight += yStep;
 
             // ComboBox برای شهر
-            Label lblCity = new Label { Text = "شهر:", Location = new Point(xLabelRight, yRight), Size = new Size(labelWidth, 30), Font = new Font("Tahoma", labelFontSize) };
-            cmbCity = new ComboBox { Location = new Point(xControlRight, yRight), Size = new Size(controlWidth, controlHeight), DropDownStyle = ComboBoxStyle.DropDownList, Font = new Font("Tahoma", 12) };
+            Label lblCity = new Label { Text = "شهر:", Location = new Point(xLabelRight, yRight), Size = new Size(labelWidth, 30), Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
+            cmbCity = new ComboBox { Location = new Point(xControlRight, yRight), Size = new Size(controlWidth, controlHeight), DropDownStyle = ComboBoxStyle.DropDownList, Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
             ApplyRoundedCorners(cmbCity, 10);
             this.Controls.Add(lblCity);
             this.Controls.Add(cmbCity);
             yRight += yStep;
 
             // ComboBox برای امور انتقال
-            Label lblAffair = new Label { Text = "امور انتقال:", Location = new Point(xLabelRight, yRight), Size = new Size(labelWidth, 30), Font = new Font("Tahoma", labelFontSize) };
-            cmbAffair = new ComboBox { Location = new Point(xControlRight, yRight), Size = new Size(controlWidth, controlHeight), DropDownStyle = ComboBoxStyle.DropDownList, Font = new Font("Tahoma", 12) };
+            Label lblAffair = new Label { Text = "امور انتقال:", Location = new Point(xLabelRight, yRight), Size = new Size(labelWidth, 30), Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
+            cmbAffair = new ComboBox { Location = new Point(xControlRight, yRight), Size = new Size(controlWidth, controlHeight), DropDownStyle = ComboBoxStyle.DropDownList, Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
             cmbAffair.SelectedIndexChanged += CmbAffair_SelectedIndexChanged;
             ApplyRoundedCorners(cmbAffair, 10);
             this.Controls.Add(lblAffair);
@@ -164,8 +163,8 @@ namespace PersonnelManagementApp
             yRight += yStep;
 
             // ComboBox برای اداره بهره‌برداری
-            Label lblDept = new Label { Text = "اداره بهره‌برداری:", Location = new Point(xLabelRight, yRight), Size = new Size(labelWidth, 30), Font = new Font("Tahoma", labelFontSize) };
-            cmbDept = new ComboBox { Location = new Point(xControlRight, yRight), Size = new Size(controlWidth, controlHeight), DropDownStyle = ComboBoxStyle.DropDownList, Font = new Font("Tahoma", 12) };
+            Label lblDept = new Label { Text = "اداره بهره‌برداری:", Location = new Point(xLabelRight, yRight), Size = new Size(labelWidth, 30), Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
+            cmbDept = new ComboBox { Location = new Point(xControlRight, yRight), Size = new Size(controlWidth, controlHeight), DropDownStyle = ComboBoxStyle.DropDownList, Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
             cmbDept.SelectedIndexChanged += CmbDept_SelectedIndexChanged;
             ApplyRoundedCorners(cmbDept, 10);
             this.Controls.Add(lblDept);
@@ -173,8 +172,8 @@ namespace PersonnelManagementApp
             yRight += yStep;
 
             // ComboBox برای ناحیه بهره‌برداری
-            Label lblDistrict = new Label { Text = "ناحیه بهره‌برداری:", Location = new Point(xLabelRight, yRight), Size = new Size(labelWidth, 30), Font = new Font("Tahoma", labelFontSize) };
-            cmbDistrict = new ComboBox { Location = new Point(xControlRight, yRight), Size = new Size(controlWidth, controlHeight), DropDownStyle = ComboBoxStyle.DropDownList, Font = new Font("Tahoma", 12) };
+            Label lblDistrict = new Label { Text = "ناحیه بهره‌برداری:", Location = new Point(xLabelRight, yRight), Size = new Size(labelWidth, 30), Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
+            cmbDistrict = new ComboBox { Location = new Point(xControlRight, yRight), Size = new Size(controlWidth, controlHeight), DropDownStyle = ComboBoxStyle.DropDownList, Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
             cmbDistrict.SelectedIndexChanged += CmbDistrict_SelectedIndexChanged;
             ApplyRoundedCorners(cmbDistrict, 10);
             this.Controls.Add(lblDistrict);
@@ -182,64 +181,64 @@ namespace PersonnelManagementApp
             yRight += yStep;
 
             // ComboBox برای نام پست
-            Label lblPostName = new Label { Text = "نام پست:", Location = new Point(xLabelRight, yRight), Size = new Size(labelWidth, 30), Font = new Font("Tahoma", labelFontSize) };
-            cmbPostName = new ComboBox { Location = new Point(xControlRight, yRight), Size = new Size(controlWidth, controlHeight), DropDownStyle = ComboBoxStyle.DropDownList, Font = new Font("Tahoma", 12) };
+            Label lblPostName = new Label { Text = "نام پست:", Location = new Point(xLabelRight, yRight), Size = new Size(labelWidth, 30), Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
+            cmbPostName = new ComboBox { Location = new Point(xControlRight, yRight), Size = new Size(controlWidth, controlHeight), DropDownStyle = ComboBoxStyle.DropDownList, Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
             ApplyRoundedCorners(cmbPostName, 10);
             this.Controls.Add(lblPostName);
             this.Controls.Add(cmbPostName);
             yRight += yStep;
 
             // ComboBox برای سطح ولتاژ
-            Label lblVoltage = new Label { Text = "سطح ولتاژ:", Location = new Point(xLabelRight, yRight), Size = new Size(labelWidth, 30), Font = new Font("Tahoma", labelFontSize) };
-            cmbVoltage = new ComboBox { Location = new Point(xControlRight, yRight), Size = new Size(controlWidth, controlHeight), DropDownStyle = ComboBoxStyle.DropDownList, Font = new Font("Tahoma", 12) };
+            Label lblVoltage = new Label { Text = "سطح ولتاژ:", Location = new Point(xLabelRight, yRight), Size = new Size(labelWidth, 30), Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
+            cmbVoltage = new ComboBox { Location = new Point(xControlRight, yRight), Size = new Size(controlWidth, controlHeight), DropDownStyle = ComboBoxStyle.DropDownList, Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
             ApplyRoundedCorners(cmbVoltage, 10);
             this.Controls.Add(lblVoltage);
             this.Controls.Add(cmbVoltage);
             yRight += yStep;
 
             // ComboBox برای شیفت کاری
-            Label lblWorkShift = new Label { Text = "شیفت کاری:", Location = new Point(xLabelRight, yRight), Size = new Size(labelWidth, 30), Font = new Font("Tahoma", labelFontSize) };
-            cmbWorkShift = new ComboBox { Location = new Point(xControlRight, yRight), Size = new Size(controlWidth, controlHeight), DropDownStyle = ComboBoxStyle.DropDownList, Font = new Font("Tahoma", 12) };
+            Label lblWorkShift = new Label { Text = "شیفت کاری:", Location = new Point(xLabelRight, yRight), Size = new Size(labelWidth, 30), Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
+            cmbWorkShift = new ComboBox { Location = new Point(xControlRight, yRight), Size = new Size(controlWidth, controlHeight), DropDownStyle = ComboBoxStyle.DropDownList, Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
             ApplyRoundedCorners(cmbWorkShift, 10);
             this.Controls.Add(lblWorkShift);
             this.Controls.Add(cmbWorkShift);
             yRight += yStep;
 
             // ComboBox برای جنسیت
-            Label lblGender = new Label { Text = "جنسیت:", Location = new Point(xLabelRight, yRight), Size = new Size(labelWidth, 30), Font = new Font("Tahoma", labelFontSize) };
-            cmbGender = new ComboBox { Location = new Point(xControlRight, yRight), Size = new Size(controlWidth, controlHeight), DropDownStyle = ComboBoxStyle.DropDownList, Font = new Font("Tahoma", 12) };
+            Label lblGender = new Label { Text = "جنسیت:", Location = new Point(xLabelRight, yRight), Size = new Size(labelWidth, 30), Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
+            cmbGender = new ComboBox { Location = new Point(xControlRight, yRight), Size = new Size(controlWidth, controlHeight), DropDownStyle = ComboBoxStyle.DropDownList, Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
             ApplyRoundedCorners(cmbGender, 10);
             this.Controls.Add(lblGender);
             this.Controls.Add(cmbGender);
             yRight += yStep;
 
             // TextBox برای نام
-            Label lblFirstName = new Label { Text = "نام:", Location = new Point(xLabelRight, yRight), Size = new Size(labelWidth, 30), Font = new Font("Tahoma", labelFontSize) };
-            txtFirstName = new TextBox { Location = new Point(xControlRight, yRight), Size = new Size(controlWidth, controlHeight), Font = new Font("Tahoma", 12) };
+            Label lblFirstName = new Label { Text = "نام:", Location = new Point(xLabelRight, yRight), Size = new Size(labelWidth, 30), Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
+            txtFirstName = new TextBox { Location = new Point(xControlRight, yRight), Size = new Size(controlWidth, controlHeight), Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
             ApplyRoundedCorners(txtFirstName, 10);
             this.Controls.Add(lblFirstName);
             this.Controls.Add(txtFirstName);
             yRight += yStep;
 
             // TextBox برای نام خانوادگی
-            Label lblLastName = new Label { Text = "نام خانوادگی:", Location = new Point(xLabelRight, yRight), Size = new Size(labelWidth, 30), Font = new Font("Tahoma", labelFontSize) };
-            txtLastName = new TextBox { Location = new Point(xControlRight, yRight), Size = new Size(controlWidth, controlHeight), Font = new Font("Tahoma", 12) };
+            Label lblLastName = new Label { Text = "نام خانوادگی:", Location = new Point(xLabelRight, yRight), Size = new Size(labelWidth, 30), Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
+            txtLastName = new TextBox { Location = new Point(xControlRight, yRight), Size = new Size(controlWidth, controlHeight), Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
             ApplyRoundedCorners(txtLastName, 10);
             this.Controls.Add(lblLastName);
             this.Controls.Add(txtLastName);
             yRight += yStep;
 
             // TextBox برای نام پدر
-            Label lblFatherName = new Label { Text = "نام پدر:", Location = new Point(xLabelRight, yRight), Size = new Size(labelWidth, 30), Font = new Font("Tahoma", labelFontSize) };
-            txtFatherName = new TextBox { Location = new Point(xControlRight, yRight), Size = new Size(controlWidth, controlHeight), Font = new Font("Tahoma", 12) };
+            Label lblFatherName = new Label { Text = "نام پدر:", Location = new Point(xLabelRight, yRight), Size = new Size(labelWidth, 30), Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
+            txtFatherName = new TextBox { Location = new Point(xControlRight, yRight), Size = new Size(controlWidth, controlHeight), Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
             ApplyRoundedCorners(txtFatherName, 10);
             this.Controls.Add(lblFatherName);
             this.Controls.Add(txtFatherName);
             yRight += yStep;
 
             // TextBox برای شماره پرسنلی
-            Label lblPersonnelNumber = new Label { Text = "شماره پرسنلی:", Location = new Point(xLabelRight, yRight), Size = new Size(labelWidth, 30), Font = new Font("Tahoma", labelFontSize) };
-            txtPersonnelNumber = new TextBox { Location = new Point(xControlRight, yRight), Size = new Size(controlWidth, controlHeight), Font = new Font("Tahoma", 12) };
+            Label lblPersonnelNumber = new Label { Text = "شماره پرسنلی:", Location = new Point(xLabelRight, yRight), Size = new Size(labelWidth, 30), Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
+            txtPersonnelNumber = new TextBox { Location = new Point(xControlRight, yRight), Size = new Size(controlWidth, controlHeight), Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
             ApplyRoundedCorners(txtPersonnelNumber, 10);
             this.Controls.Add(lblPersonnelNumber);
             this.Controls.Add(txtPersonnelNumber);
@@ -247,119 +246,119 @@ namespace PersonnelManagementApp
 
             // *** ستون سمت چپ: فیلدهای 14 تا 28 ***
             // TextBox برای کد ملی
-            Label lblNationalID = new Label { Text = "کد ملی:", Location = new Point(xLabelLeft, yLeft), Size = new Size(labelWidth, 30), Font = new Font("Tahoma", labelFontSize) };
-            txtNationalID = new TextBox { Location = new Point(xControlLeft, yLeft), Size = new Size(controlWidth, controlHeight), Font = new Font("Tahoma", 12) };
+            Label lblNationalID = new Label { Text = "کد ملی:", Location = new Point(xLabelLeft, yLeft), Size = new Size(labelWidth, 30), Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
+            txtNationalID = new TextBox { Location = new Point(xControlLeft, yLeft), Size = new Size(controlWidth, controlHeight), Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
             ApplyRoundedCorners(txtNationalID, 10);
             this.Controls.Add(lblNationalID);
             this.Controls.Add(txtNationalID);
             yLeft += yStep;
 
             // TextBox برای شماره موبایل
-            Label lblMobileNumber = new Label { Text = "شماره موبایل:", Location = new Point(xLabelLeft, yLeft), Size = new Size(labelWidth, 30), Font = new Font("Tahoma", labelFontSize) };
-            txtMobileNumber = new TextBox { Location = new Point(xControlLeft, yLeft), Size = new Size(controlWidth, controlHeight), Font = new Font("Tahoma", 12) };
+            Label lblMobileNumber = new Label { Text = "شماره موبایل:", Location = new Point(xLabelLeft, yLeft), Size = new Size(labelWidth, 30), Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
+            txtMobileNumber = new TextBox { Location = new Point(xControlLeft, yLeft), Size = new Size(controlWidth, controlHeight), Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
             ApplyRoundedCorners(txtMobileNumber, 10);
             this.Controls.Add(lblMobileNumber);
             this.Controls.Add(txtMobileNumber);
             yLeft += yStep;
 
             // TextBox برای تاریخ تولد
-            Label lblBirthDate = new Label { Text = "تاریخ تولد:", Location = new Point(xLabelLeft, yLeft), Size = new Size(labelWidth, 30), Font = new Font("Tahoma", labelFontSize) };
-            txtBirthDate = new TextBox { Location = new Point(xControlLeft, yLeft), Size = new Size(controlWidth, controlHeight), Font = new Font("Tahoma", 12) };
+            Label lblBirthDate = new Label { Text = "تاریخ تولد:", Location = new Point(xLabelLeft, yLeft), Size = new Size(labelWidth, 30), Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
+            txtBirthDate = new TextBox { Location = new Point(xControlLeft, yLeft), Size = new Size(controlWidth, controlHeight), Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
             ApplyRoundedCorners(txtBirthDate, 10);
             this.Controls.Add(lblBirthDate);
             this.Controls.Add(txtBirthDate);
             yLeft += yStep;
 
             // TextBox برای تاریخ استخدام
-            Label lblHireDate = new Label { Text = "تاریخ استخدام:", Location = new Point(xLabelLeft, yLeft), Size = new Size(labelWidth, 30), Font = new Font("Tahoma", labelFontSize) };
-            txtHireDate = new TextBox { Location = new Point(xControlLeft, yLeft), Size = new Size(controlWidth, controlHeight), Font = new Font("Tahoma", 12) };
+            Label lblHireDate = new Label { Text = "تاریخ استخدام:", Location = new Point(xLabelLeft, yLeft), Size = new Size(labelWidth, 30), Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
+            txtHireDate = new TextBox { Location = new Point(xControlLeft, yLeft), Size = new Size(controlWidth, controlHeight), Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
             ApplyRoundedCorners(txtHireDate, 10);
             this.Controls.Add(lblHireDate);
             this.Controls.Add(txtHireDate);
             yLeft += yStep;
 
             // TextBox برای تاریخ شروع به کار
-            Label lblStartDateOperation = new Label { Text = "تاریخ شروع به کار:", Location = new Point(xLabelLeft, yLeft), Size = new Size(labelWidth, 30), Font = new Font("Tahoma", labelFontSize) };
-            txtStartDateOperation = new TextBox { Location = new Point(xControlLeft, yLeft), Size = new Size(controlWidth, controlHeight), Font = new Font("Tahoma", 12) };
+            Label lblStartDateOperation = new Label { Text = "تاریخ شروع به کار:", Location = new Point(xLabelLeft, yLeft), Size = new Size(labelWidth, 30), Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
+            txtStartDateOperation = new TextBox { Location = new Point(xControlLeft, yLeft), Size = new Size(controlWidth, controlHeight), Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
             ApplyRoundedCorners(txtStartDateOperation, 10);
             this.Controls.Add(lblStartDateOperation);
             this.Controls.Add(txtStartDateOperation);
             yLeft += yStep;
 
             // ComboBox برای نوع قرارداد
-            Label lblContractType = new Label { Text = "نوع قرارداد:", Location = new Point(xLabelLeft, yLeft), Size = new Size(labelWidth, 30), Font = new Font("Tahoma", labelFontSize) };
-            cmbContractType = new ComboBox { Location = new Point(xControlLeft, yLeft), Size = new Size(controlWidth, controlHeight), DropDownStyle = ComboBoxStyle.DropDownList, Font = new Font("Tahoma", 12) };
+            Label lblContractType = new Label { Text = "نوع قرارداد:", Location = new Point(xLabelLeft, yLeft), Size = new Size(labelWidth, 30), Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
+            cmbContractType = new ComboBox { Location = new Point(xControlLeft, yLeft), Size = new Size(controlWidth, controlHeight), DropDownStyle = ComboBoxStyle.DropDownList, Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
             ApplyRoundedCorners(cmbContractType, 10);
             this.Controls.Add(lblContractType);
             this.Controls.Add(cmbContractType);
             yLeft += yStep;
 
             // ComboBox برای سطح شغل
-            Label lblJobLevel = new Label { Text = "سطح شغل:", Location = new Point(xLabelLeft, yLeft), Size = new Size(labelWidth, 30), Font = new Font("Tahoma", labelFontSize) };
-            cmbJobLevel = new ComboBox { Location = new Point(xControlLeft, yLeft), Size = new Size(controlWidth, controlHeight), DropDownStyle = ComboBoxStyle.DropDownList, Font = new Font("Tahoma", 12) };
+            Label lblJobLevel = new Label { Text = "سطح شغل:", Location = new Point(xLabelLeft, yLeft), Size = new Size(labelWidth, 30), Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
+            cmbJobLevel = new ComboBox { Location = new Point(xControlLeft, yLeft), Size = new Size(controlWidth, controlHeight), DropDownStyle = ComboBoxStyle.DropDownList, Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
             ApplyRoundedCorners(cmbJobLevel, 10);
             this.Controls.Add(lblJobLevel);
             this.Controls.Add(cmbJobLevel);
             yLeft += yStep;
 
             // ComboBox برای شرکت
-            Label lblCompany = new Label { Text = "شرکت:", Location = new Point(xLabelLeft, yLeft), Size = new Size(labelWidth, 30), Font = new Font("Tahoma", labelFontSize) };
-            cmbCompany = new ComboBox { Location = new Point(xControlLeft, yLeft), Size = new Size(controlWidth, controlHeight), DropDownStyle = ComboBoxStyle.DropDownList, Font = new Font("Tahoma", 12) };
+            Label lblCompany = new Label { Text = "شرکت:", Location = new Point(xLabelLeft, yLeft), Size = new Size(labelWidth, 30), Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
+            cmbCompany = new ComboBox { Location = new Point(xControlLeft, yLeft), Size = new Size(controlWidth, controlHeight), DropDownStyle = ComboBoxStyle.DropDownList, Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
             ApplyRoundedCorners(cmbCompany, 10);
             this.Controls.Add(lblCompany);
             this.Controls.Add(cmbCompany);
             yLeft += yStep;
 
             // ComboBox برای مدرک تحصیلی
-            Label lblDegree = new Label { Text = "مدرک تحصیلی:", Location = new Point(xLabelLeft, yLeft), Size = new Size(labelWidth, 30), Font = new Font("Tahoma", labelFontSize) };
-            cmbDegree = new ComboBox { Location = new Point(xControlLeft, yLeft), Size = new Size(controlWidth, controlHeight), DropDownStyle = ComboBoxStyle.DropDownList, Font = new Font("Tahoma", 12) };
+            Label lblDegree = new Label { Text = "مدرک تحصیلی:", Location = new Point(xLabelLeft, yLeft), Size = new Size(labelWidth, 30), Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
+            cmbDegree = new ComboBox { Location = new Point(xControlLeft, yLeft), Size = new Size(controlWidth, controlHeight), DropDownStyle = ComboBoxStyle.DropDownList, Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
             ApplyRoundedCorners(cmbDegree, 10);
             this.Controls.Add(lblDegree);
             this.Controls.Add(cmbDegree);
             yLeft += yStep;
 
             // ComboBox برای رشته تحصیلی
-            Label lblDegreeField = new Label { Text = "رشته تحصیلی:", Location = new Point(xLabelLeft, yLeft), Size = new Size(labelWidth, 30), Font = new Font("Tahoma", labelFontSize) };
-            cmbDegreeField = new ComboBox { Location = new Point(xControlLeft, yLeft), Size = new Size(controlWidth, controlHeight), DropDownStyle = ComboBoxStyle.DropDownList, Font = new Font("Tahoma", 12) };
+            Label lblDegreeField = new Label { Text = "رشته تحصیلی:", Location = new Point(xLabelLeft, yLeft), Size = new Size(labelWidth, 30), Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
+            cmbDegreeField = new ComboBox { Location = new Point(xControlLeft, yLeft), Size = new Size(controlWidth, controlHeight), DropDownStyle = ComboBoxStyle.DropDownList, Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
             ApplyRoundedCorners(cmbDegreeField, 10);
             this.Controls.Add(lblDegreeField);
             this.Controls.Add(cmbDegreeField);
             yLeft += yStep;
 
             // ComboBox برای عنوان شغلی اصلی
-            Label lblMainJobTitle = new Label { Text = "عنوان شغلی اصلی:", Location = new Point(xLabelLeft, yLeft), Size = new Size(labelWidth, 30), Font = new Font("Tahoma", labelFontSize) };
-            cmbMainJobTitle = new ComboBox { Location = new Point(xControlLeft, yLeft), Size = new Size(controlWidth, controlHeight), DropDownStyle = ComboBoxStyle.DropDownList, Font = new Font("Tahoma", 12) };
+            Label lblMainJobTitle = new Label { Text = "عنوان شغلی اصلی:", Location = new Point(xLabelLeft, yLeft), Size = new Size(labelWidth, 30), Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
+            cmbMainJobTitle = new ComboBox { Location = new Point(xControlLeft, yLeft), Size = new Size(controlWidth, controlHeight), DropDownStyle = ComboBoxStyle.DropDownList, Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
             ApplyRoundedCorners(cmbMainJobTitle, 10);
             this.Controls.Add(lblMainJobTitle);
             this.Controls.Add(cmbMainJobTitle);
             yLeft += yStep;
 
             // ComboBox برای فعالیت فعلی
-            Label lblCurrentActivity = new Label { Text = "فعالیت فعلی:", Location = new Point(xLabelLeft, yLeft), Size = new Size(labelWidth, 30), Font = new Font("Tahoma", labelFontSize) };
-            cmbCurrentActivity = new ComboBox { Location = new Point(xControlLeft, yLeft), Size = new Size(controlWidth, controlHeight), DropDownStyle = ComboBoxStyle.DropDownList, Font = new Font("Tahoma", 12) };
+            Label lblCurrentActivity = new Label { Text = "فعالیت فعلی:", Location = new Point(xLabelLeft, yLeft), Size = new Size(labelWidth, 30), Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
+            cmbCurrentActivity = new ComboBox { Location = new Point(xControlLeft, yLeft), Size = new Size(controlWidth, controlHeight), DropDownStyle = ComboBoxStyle.DropDownList, Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
             ApplyRoundedCorners(cmbCurrentActivity, 10);
             this.Controls.Add(lblCurrentActivity);
             this.Controls.Add(cmbCurrentActivity);
             yLeft += yStep;
 
             // CheckBox برای مغایرت
-            Label lblInconsistency = new Label { Text = "مغایرت:", Location = new Point(xLabelLeft, yLeft), Size = new Size(labelWidth, 30), Font = new Font("Tahoma", labelFontSize) };
-            chkInconsistency = new CheckBox { Location = new Point(xControlLeft, yLeft), Size = new Size(controlWidth, controlHeight), Font = new Font("Tahoma", 12) };
+            Label lblInconsistency = new Label { Text = "مغایرت:", Location = new Point(xLabelLeft, yLeft), Size = new Size(labelWidth, 30), Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
+            chkInconsistency = new CheckBox { Location = new Point(xControlLeft, yLeft), Size = new Size(controlWidth, controlHeight), Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
             this.Controls.Add(lblInconsistency);
             this.Controls.Add(chkInconsistency);
             yLeft += yStep;
 
             // ComboBox برای وضعیت حضور
-            Label lblStatus = new Label { Text = "وضعیت حضور:", Location = new Point(xLabelLeft, yLeft), Size = new Size(labelWidth, 30), Font = new Font("Tahoma", labelFontSize) };
-            cmbStatus = new ComboBox { Location = new Point(xControlLeft, yLeft), Size = new Size(controlWidth, controlHeight), DropDownStyle = ComboBoxStyle.DropDownList, Font = new Font("Tahoma", 12) };
+            Label lblStatus = new Label { Text = "وضعیت حضور:", Location = new Point(xLabelLeft, yLeft), Size = new Size(labelWidth, 30), Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
+            cmbStatus = new ComboBox { Location = new Point(xControlLeft, yLeft), Size = new Size(controlWidth, controlHeight), DropDownStyle = ComboBoxStyle.DropDownList, Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
             ApplyRoundedCorners(cmbStatus, 10);
             this.Controls.Add(lblStatus);
             this.Controls.Add(cmbStatus);
             yLeft += yStep;
 
             // TextBox برای توضیحات
-            Label lblDescription = new Label { Text = "توضیحات:", Location = new Point(xLabelLeft, yLeft), Size = new Size(labelWidth, 30), Font = new Font("Tahoma", labelFontSize) };
-            txtDescription = new TextBox { Location = new Point(xControlLeft, yLeft), Size = new Size(controlWidth, 100), Multiline = true, Font = new Font("Tahoma", 12) };
+            Label lblDescription = new Label { Text = "توضیحات:", Location = new Point(xLabelLeft, yLeft), Size = new Size(labelWidth, 30), Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
+            txtDescription = new TextBox { Location = new Point(xControlLeft, yLeft), Size = new Size(controlWidth, 100), Multiline = true, Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize) };
             ApplyRoundedCorners(txtDescription, 10);
             this.Controls.Add(lblDescription);
             this.Controls.Add(txtDescription);
@@ -377,7 +376,7 @@ namespace PersonnelManagementApp
                 Text = "به‌روزرسانی",
                 Location = new Point(xButtonStart, maxY),
                 Size = new Size(buttonWidth, 50),
-                Font = new Font("Tahoma", 12),
+                Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize),
                 BackColor = Color.LightGreen,
                 ForeColor = Color.White
             };
@@ -391,7 +390,7 @@ namespace PersonnelManagementApp
                 Text = "لغو",
                 Location = new Point(xButtonStart + buttonWidth + buttonSpace, maxY),
                 Size = new Size(buttonWidth, 50),
-                Font = new Font("Tahoma", 12),
+                Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize),
                 BackColor = Color.LightCoral,
                 ForeColor = Color.White
             };
