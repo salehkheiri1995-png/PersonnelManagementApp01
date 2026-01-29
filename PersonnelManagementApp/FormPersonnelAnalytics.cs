@@ -91,6 +91,59 @@ namespace PersonnelManagementApp
             InitializeComponent();
             BuildUI();
             LoadData();
+            SubscribeToDataChangeEvents();
+        }
+
+        /// <summary>
+        /// اشتراک در رویدادهای تغییر داده‌ها برای آپدیت فوری نمودارها
+        /// </summary>
+        private void SubscribeToDataChangeEvents()
+        {
+            // اشتراک در رویدادهای حذف، اضافه کردن و ویرایش
+            DataChangeNotifier.OnPersonnelDeleted += OnDataChanged;
+            DataChangeNotifier.OnPersonnelAdded += OnDataChanged;
+            DataChangeNotifier.OnPersonnelUpdated += OnDataChanged;
+            DataChangeNotifier.OnRefreshAllCharts += OnRefreshAllCharts;
+        }
+
+        /// <summary>
+        /// رویدادی که وقتی داده‌ها تغییر می‌کنند فراخوانی می‌شود
+        /// </summary>
+        private void OnDataChanged(object sender, DataChangeEventArgs e)
+        {
+            try
+            {
+                // آپدیت مدل داده‌ها
+                analyticsModel.ReloadData(dbHelper);
+                LoadFilterOptions();
+                RefreshAllCharts();
+
+                // نمایش اطلاع به کاربر
+                string changeType = e.ChangeType == DataChangeType.Deleted ? "حذف" :
+                                   e.ChangeType == DataChangeType.Added ? "اضافه" : "ویرایش";
+                lblFilterInfo.Text = $"✓ دادهها به‌روز شدند: {changeType} - {e.FirstName} {e.LastName}";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"❌ خطا در آپدیت دادهها: {ex.Message}", "خطا");
+            }
+        }
+
+        /// <summary>
+        /// رویدادی برای آپدیت تمام نمودارها
+        /// </summary>
+        private void OnRefreshAllCharts(object sender, EventArgs e)
+        {
+            try
+            {
+                analyticsModel.ReloadData(dbHelper);
+                LoadFilterOptions();
+                RefreshAllCharts();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"❌ خطا: {ex.Message}");
+            }
         }
 
         private void BuildUI()
@@ -1170,7 +1223,8 @@ namespace PersonnelManagementApp
                             {
                                 MessageBox.Show($"✅ پرسنل {firstName} {lastName} با موفقیت حذف شد.", "موفق");
                                 dgv.Rows.RemoveAt(e.RowIndex);
-                                RefreshAllCharts();
+                                // تریگر کردن رویداد برای آپدیت فوری نمودارها
+                                DataChangeNotifier.NotifyPersonnelDeleted(personnelID, firstName, lastName);
                                 
                                 if (dgv.Rows.Count == 0)
                                 {
@@ -1377,6 +1431,14 @@ namespace PersonnelManagementApp
             }
         }
 
+        /// <summary>
+        /// متد برای آپدیت دوباره دادهها بدون بسته شدن فرم
+        /// </summary>
+        public bool ReloadData(DbHelper dbHelper)
+        {
+            return LoadData(dbHelper);
+        }
+
         private int GetIntValue(object value) => value != DBNull.Value && value != null ? Convert.ToInt32(value) : 0;
         private DateTime? GetDateValue(object value) => value != DBNull.Value && value != null ? Convert.ToDateTime(value) : (DateTime?)null;
 
@@ -1400,6 +1462,7 @@ namespace PersonnelManagementApp
         {
             try
             {
+                cache.Clear();
                 DataTable dt = dbHelper.ExecuteQuery(query);
                 if (dt == null) return;
 
