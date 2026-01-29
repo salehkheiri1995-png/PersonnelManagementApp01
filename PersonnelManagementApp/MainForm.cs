@@ -2,14 +2,16 @@ using System;
 using System.Windows.Forms;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-//using PostDatabaseManager;
 
 namespace PersonnelManagementApp
 {
     public partial class MainForm : Form
     {
+        private readonly SettingsManager settingsManager;
+
         public MainForm()
         {
+            settingsManager = new SettingsManager();
             InitializeComponent();
         }
 
@@ -18,10 +20,10 @@ namespace PersonnelManagementApp
             this.Text = "مدیریت پرسنل";
             this.WindowState = FormWindowState.Maximized;
             this.RightToLeft = RightToLeft.Yes;
-            this.BackColor = Color.FromArgb(240, 248, 255);
+            this.BackColor = settingsManager.BackgroundColor;
 
             // پسزمینه گرادیانت
-            using (LinearGradientBrush brush = new LinearGradientBrush(this.ClientRectangle, Color.LightBlue, Color.White, LinearGradientMode.Vertical))
+            using (LinearGradientBrush brush = new LinearGradientBrush(this.ClientRectangle, settingsManager.ButtonAddColor, Color.White, LinearGradientMode.Vertical))
             {
                 this.BackgroundImage = new Bitmap(this.Width, this.Height);
                 using (Graphics g = Graphics.FromImage(this.BackgroundImage))
@@ -31,7 +33,7 @@ namespace PersonnelManagementApp
             }
 
             int centerX = (this.ClientSize.Width - 300) / 2;
-            int centerY = (this.ClientSize.Height - 400) / 2;
+            int centerY = (this.ClientSize.Height - 450) / 2;
 
             // سرتیتر
             Label lblTitle = new Label
@@ -39,7 +41,7 @@ namespace PersonnelManagementApp
                 Text = "سیستم مدیریت پرسنل",
                 Location = new Point(centerX, centerY - 80),
                 Size = new Size(300, 50),
-                Font = new Font("Tahoma", 20, FontStyle.Bold),
+                Font = settingsManager.GetTitleFont(FontStyle.Bold),
                 ForeColor = Color.Navy,
                 TextAlign = ContentAlignment.MiddleCenter
             };
@@ -51,11 +53,11 @@ namespace PersonnelManagementApp
                 Text = "ثبت پرسنل جدید",
                 Location = new Point(centerX, centerY),
                 Size = new Size(300, 50),
-                Font = new Font("Tahoma", 12, FontStyle.Bold),
-                BackColor = Color.LightBlue,
+                Font = settingsManager.GetButtonFont(FontStyle.Bold),
+                BackColor = settingsManager.ButtonAddColor,
                 ForeColor = Color.White
             };
-            ApplyRoundedCorners(btnAdd, 15);
+            ApplyRoundedCorners(btnAdd, settingsManager.ButtonCornerRadius);
             btnAdd.Click += (s, e) => new FormPersonnelRegister().ShowDialog();
             this.Controls.Add(btnAdd);
 
@@ -65,11 +67,11 @@ namespace PersonnelManagementApp
                 Text = "ویرایش پرسنل",
                 Location = new Point(centerX, centerY + 60),
                 Size = new Size(300, 50),
-                Font = new Font("Tahoma", 12, FontStyle.Bold),
-                BackColor = Color.LightGreen,
+                Font = settingsManager.GetButtonFont(FontStyle.Bold),
+                BackColor = settingsManager.ButtonEditColor,
                 ForeColor = Color.White
             };
-            ApplyRoundedCorners(btnEdit, 15);
+            ApplyRoundedCorners(btnEdit, settingsManager.ButtonCornerRadius);
             btnEdit.Click += (s, e) => new FormPersonnelEdit().ShowDialog();
             this.Controls.Add(btnEdit);
 
@@ -79,11 +81,11 @@ namespace PersonnelManagementApp
                 Text = "حذف پرسنل",
                 Location = new Point(centerX, centerY + 120),
                 Size = new Size(300, 50),
-                Font = new Font("Tahoma", 12, FontStyle.Bold),
-                BackColor = Color.LightCoral,
+                Font = settingsManager.GetButtonFont(FontStyle.Bold),
+                BackColor = settingsManager.ButtonDeleteColor,
                 ForeColor = Color.White
             };
-            ApplyRoundedCorners(btnDelete, 15);
+            ApplyRoundedCorners(btnDelete, settingsManager.ButtonCornerRadius);
             btnDelete.Click += (s, e) => new FormPersonnelDelete().ShowDialog();
             this.Controls.Add(btnDelete);
 
@@ -93,11 +95,11 @@ namespace PersonnelManagementApp
                 Text = "جستجوی پرسنل",
                 Location = new Point(centerX, centerY + 180),
                 Size = new Size(300, 50),
-                Font = new Font("Tahoma", 12, FontStyle.Bold),
-                BackColor = Color.Orange,
+                Font = settingsManager.GetButtonFont(FontStyle.Bold),
+                BackColor = settingsManager.ButtonSearchColor,
                 ForeColor = Color.White
             };
-            ApplyRoundedCorners(btnSearch, 15);
+            ApplyRoundedCorners(btnSearch, settingsManager.ButtonCornerRadius);
             btnSearch.Click += (s, e) => new FormPersonnelSearch().ShowDialog();
             this.Controls.Add(btnSearch);
 
@@ -107,28 +109,43 @@ namespace PersonnelManagementApp
                 Text = "تحلیل داده‌های پرسنل",
                 Location = new Point(centerX, centerY + 240),
                 Size = new Size(300, 50),
-                Font = new Font("Tahoma", 12, FontStyle.Bold),
-                BackColor = Color.SteelBlue,
+                Font = settingsManager.GetButtonFont(FontStyle.Bold),
+                BackColor = settingsManager.ButtonAnalyticsColor,
                 ForeColor = Color.White
             };
-            ApplyRoundedCorners(btnAnalytics, 15);
-            
-            // ✅ مشکل حل شد: FormPersonnelAnalyticsAdvanced -> FormPersonnelAnalytics
+            ApplyRoundedCorners(btnAnalytics, settingsManager.ButtonCornerRadius);
             btnAnalytics.Click += (s, e) => new FormPersonnelAnalytics().ShowDialog();
-            
             this.Controls.Add(btnAnalytics);
+
+            // دکمه تنظیمات
+            Button btnSettings = new Button
+            {
+                Text = "تنظیمات",
+                Location = new Point(centerX, centerY + 300),
+                Size = new Size(300, 50),
+                Font = settingsManager.GetButtonFont(FontStyle.Bold),
+                BackColor = settingsManager.ButtonSettingsColor,
+                ForeColor = Color.White
+            };
+            ApplyRoundedCorners(btnSettings, settingsManager.ButtonCornerRadius);
+            btnSettings.Click += (s, e) => 
+            {
+                FormSettings settingsForm = new FormSettings(settingsManager);
+                settingsForm.ShowDialog();
+            };
+            this.Controls.Add(btnSettings);
 
             // دکمه خروج
             Button btnExit = new Button
             {
                 Text = "خروج",
-                Location = new Point(centerX, centerY + 300),
+                Location = new Point(centerX, centerY + 360),
                 Size = new Size(300, 50),
-                Font = new Font("Tahoma", 12, FontStyle.Bold),
+                Font = settingsManager.GetButtonFont(FontStyle.Bold),
                 BackColor = Color.Gray,
                 ForeColor = Color.White
             };
-            ApplyRoundedCorners(btnExit, 15);
+            ApplyRoundedCorners(btnExit, settingsManager.ButtonCornerRadius);
             btnExit.Click += (s, e) => Application.Exit();
             this.Controls.Add(btnExit);
         }
