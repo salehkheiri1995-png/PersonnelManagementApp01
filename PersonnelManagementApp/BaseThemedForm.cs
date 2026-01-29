@@ -29,8 +29,8 @@ namespace PersonnelManagementApp
         {
             this.BackColor = settingsManager.BackgroundColor;
             this.RightToLeft = settingsManager.RightToLeftLayout ? RightToLeft.Yes : RightToLeft.No;
-            this.Font = settingsManager.GetPrimaryFont();
             this.ForeColor = settingsManager.TextColor;
+            // NOTE: Do NOT override form font - let each form set its own
         }
 
         /// <summary>
@@ -55,6 +55,8 @@ namespace PersonnelManagementApp
 
         /// <summary>
         /// Apply theme to a specific control
+        /// IMPORTANT: This only applies COLORS and STYLES, not fonts
+        /// Fonts are set in InitializeComponent and should NOT be changed
         /// </summary>
         protected virtual void ApplyThemeToControl(Control control)
         {
@@ -64,18 +66,18 @@ namespace PersonnelManagementApp
             }
             else if (control is Label lbl)
             {
-                lbl.Font = settingsManager.GetPrimaryFont();
+                // Only apply color, NOT font
                 lbl.ForeColor = settingsManager.TextColor;
             }
-            else if (control is TextBox || control is ComboBox || control is ListBox)
+            else if (control is TextBox || control is ComboBox || control is ListBox || control is CheckedListBox)
             {
-                control.Font = settingsManager.GetPrimaryFont();
+                // Only apply color, NOT font
                 control.ForeColor = settingsManager.TextColor;
                 control.BackColor = Color.White;
             }
             else if (control is DataGridView dgv)
             {
-                dgv.Font = settingsManager.GetPrimaryFont();
+                // Only apply color, NOT font
                 dgv.ForeColor = settingsManager.TextColor;
                 dgv.BackgroundColor = settingsManager.BackgroundColor;
             }
@@ -83,10 +85,11 @@ namespace PersonnelManagementApp
 
         /// <summary>
         /// Apply button theme based on button name/tag
+        /// Changes only colors and style, keeps the font from InitializeComponent
         /// </summary>
         protected virtual void ApplyButtonTheme(Button btn)
         {
-            btn.Font = settingsManager.GetButtonFont(FontStyle.Bold);
+            // Keep the button's existing font - do NOT change it
             btn.ForeColor = Color.White;
 
             // Determine button color based on name or tag
@@ -136,6 +139,7 @@ namespace PersonnelManagementApp
 
         /// <summary>
         /// Register a control for theme updates
+        /// Only colors and styles will be updated, not fonts
         /// </summary>
         protected void RegisterThemedControl(Control control)
         {
