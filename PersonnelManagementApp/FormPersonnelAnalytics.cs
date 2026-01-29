@@ -9,7 +9,7 @@ using System.Drawing.Drawing2D;
 
 namespace PersonnelManagementApp
 {
-    public partial class FormPersonnelAnalytics : Form
+    public partial class FormPersonnelAnalytics : BaseThemedForm
     {
         private readonly DbHelper dbHelper;
         private readonly TabControl tabControl;
@@ -100,7 +100,7 @@ namespace PersonnelManagementApp
             RightToLeft = RightToLeft.Yes;
             BackColor = Color.FromArgb(240, 248, 255);
             MinimumSize = new Size(1200, 700);
-            Font = new Font("Segoe UI", 10);
+            Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize);
 
             // ========== پنل فیلتر اسکرول‌پذیر ==========
             Panel panelFilter = new Panel
@@ -111,6 +111,7 @@ namespace PersonnelManagementApp
                 BorderStyle = BorderStyle.FixedSingle,
                 AutoScroll = true
             };
+            RegisterThemedControl(panelFilter);
 
             int xPos = 15;
             int yPos = 15;
@@ -173,49 +174,54 @@ namespace PersonnelManagementApp
                 Text = "📅 تاریخ استخدام",
                 Location = new Point(xPos, yPos),
                 Size = new Size(colWidth, 25),
-                Font = new Font("Segoe UI", 10, FontStyle.Bold),
+                Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize, FontStyle.Bold),
                 ForeColor = Color.FromArgb(0, 102, 204)
             };
             panelFilter.Controls.Add(lblHireDate);
+            RegisterThemedControl(lblHireDate);
 
             chkHireDateFilter = new CheckBox
             {
                 Text = "فعال‌سازی فیلتر",
                 Location = new Point(xPos, yPos + 30),
                 Size = new Size(colWidth, 25),
-                Font = new Font("Segoe UI", 9)
+                Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize)
             };
             chkHireDateFilter.CheckedChanged += ChkHireDateFilter_CheckedChanged;
             panelFilter.Controls.Add(chkHireDateFilter);
+            RegisterThemedControl(chkHireDateFilter);
 
             dtpHireDateFrom = new DateTimePicker
             {
                 Location = new Point(xPos, yPos + 60),
                 Size = new Size(colWidth, 30),
-                Font = new Font("Segoe UI", 9),
+                Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize),
                 Enabled = false,
                 Value = DateTime.Now.AddYears(-10)
             };
             panelFilter.Controls.Add(dtpHireDateFrom);
+            RegisterThemedControl(dtpHireDateFrom);
 
             Label lblTo = new Label
             {
                 Text = "تا",
                 Location = new Point(xPos, yPos + 95),
                 Size = new Size(colWidth, 20),
-                Font = new Font("Segoe UI", 9)
+                Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize)
             };
             panelFilter.Controls.Add(lblTo);
+            RegisterThemedControl(lblTo);
 
             dtpHireDateTo = new DateTimePicker
             {
                 Location = new Point(xPos, yPos + 115),
                 Size = new Size(colWidth, 30),
-                Font = new Font("Segoe UI", 9),
+                Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize),
                 Enabled = false,
                 Value = DateTime.Now
             };
             panelFilter.Controls.Add(dtpHireDateTo);
+            RegisterThemedControl(dtpHireDateTo);
 
             // دکمه پاک کردن
             btnClearFilters.Text = "🔄 پاک کردن تمام فیلترها";
@@ -223,24 +229,28 @@ namespace PersonnelManagementApp
             btnClearFilters.Size = new Size(colWidth, 40);
             btnClearFilters.BackColor = Color.FromArgb(220, 53, 69);
             btnClearFilters.ForeColor = Color.White;
-            btnClearFilters.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+            btnClearFilters.Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize, FontStyle.Bold);
             btnClearFilters.Click += BtnClearFilters_Click;
             btnClearFilters.FlatStyle = FlatStyle.Flat;
             panelFilter.Controls.Add(btnClearFilters);
+            ApplyRoundedCorners(btnClearFilters, 10);
+            RegisterThemedControl(btnClearFilters);
 
             // اطلاعات فیلتر
             lblFilterInfo.Text = "✓ فیلتری فعال نیست";
             lblFilterInfo.Location = new Point(15, 305);
             lblFilterInfo.Size = new Size(1000, 30);
-            lblFilterInfo.Font = new Font("Segoe UI", 11, FontStyle.Bold);
+            lblFilterInfo.Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize, FontStyle.Bold);
             lblFilterInfo.ForeColor = Color.FromArgb(0, 102, 204);
             lblFilterInfo.AutoSize = false;
             panelFilter.Controls.Add(lblFilterInfo);
+            RegisterThemedControl(lblFilterInfo);
 
             // ========== Tab Control ==========
             tabControl.Dock = DockStyle.Fill;
             tabControl.RightToLeft = RightToLeft.Yes;
             tabControl.ItemSize = new Size(180, 35);
+            RegisterThemedControl(tabControl);
 
             // Tab خلاصه آماری
             TabPage tabSummary = CreateSummaryTab();
@@ -267,13 +277,14 @@ namespace PersonnelManagementApp
             dgvPersonnelStats.EnableHeadersVisualStyles = false;
             dgvPersonnelStats.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(0, 102, 204);
             dgvPersonnelStats.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
-            dgvPersonnelStats.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 11, FontStyle.Bold);
+            dgvPersonnelStats.ColumnHeadersDefaultCellStyle.Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize, FontStyle.Bold);
             dgvPersonnelStats.ColumnHeadersHeight = 35;
             dgvPersonnelStats.DefaultCellStyle.BackColor = Color.White;
-            dgvPersonnelStats.DefaultCellStyle.Font = new Font("Segoe UI", 9);
+            dgvPersonnelStats.DefaultCellStyle.Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize);
             dgvPersonnelStats.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(240, 248, 255);
             tabStats.Controls.Add(dgvPersonnelStats);
             tabControl.TabPages.Add(tabStats);
+            RegisterThemedControl(dgvPersonnelStats);
 
             Controls.Add(tabControl);
             Controls.Add(panelFilter);
@@ -286,18 +297,20 @@ namespace PersonnelManagementApp
                 Text = title,
                 Location = new Point(x, y),
                 Size = new Size(width, 25),
-                Font = new Font("Segoe UI", 10, FontStyle.Bold),
+                Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize, FontStyle.Bold),
                 ForeColor = Color.FromArgb(0, 102, 204)
             };
             parent.Controls.Add(lbl);
+            RegisterThemedControl(lbl);
 
             clb.Location = new Point(x, y + 30);
             clb.Size = new Size(width, height - 30);
             clb.RightToLeft = RightToLeft.Yes;
             clb.ItemCheck += eventHandler;
             clb.BackColor = Color.White;
-            clb.Font = new Font("Segoe UI", 9);
+            clb.Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize);
             parent.Controls.Add(clb);
+            RegisterThemedControl(clb);
         }
 
         private void AddChartTab(TabControl tabControl, string title, Chart chart, DataGridView detailsGrid)
@@ -332,8 +345,9 @@ namespace PersonnelManagementApp
                 detailsGrid.EnableHeadersVisualStyles = false;
                 detailsGrid.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(0, 102, 204);
                 detailsGrid.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
-                detailsGrid.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+                detailsGrid.ColumnHeadersDefaultCellStyle.Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize, FontStyle.Bold);
                 split.Panel2.Controls.Add(detailsGrid);
+                RegisterThemedControl(detailsGrid);
 
                 tab.Controls.Add(split);
             }
@@ -354,7 +368,7 @@ namespace PersonnelManagementApp
             tabControl.TabPages.Add(tab);
         }
 
-        private static TabPage CreateSummaryTab()
+        private TabPage CreateSummaryTab()
         {
             TabPage tab = new TabPage("📊 خلاصه آماری");
             DataGridView dgv = new DataGridView
@@ -368,12 +382,14 @@ namespace PersonnelManagementApp
             };
             dgv.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(0, 102, 204);
             dgv.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
-            dgv.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 11, FontStyle.Bold);
+            dgv.ColumnHeadersDefaultCellStyle.Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize, FontStyle.Bold);
             dgv.ColumnHeadersHeight = 35;
+            dgv.DefaultCellStyle.Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize);
             dgv.Columns.Add("Metric", "معیار");
             dgv.Columns.Add("Value", "مقدار");
             tab.Controls.Add(dgv);
             tab.Tag = dgv;
+            RegisterThemedControl(dgv);
             return tab;
         }
 
@@ -728,7 +744,7 @@ namespace PersonnelManagementApp
 
                 chartDepartmentPie.Series.Add(series);
                 chartDepartmentPie.Titles.Clear();
-                chartDepartmentPie.Titles.Add(new Title("📊 توزیع پرسنل در ادارهها") { Font = new Font("Segoe UI", 14, FontStyle.Bold) });
+                chartDepartmentPie.Titles.Add(new Title("📊 توزیع پرسنل در ادارهها") { Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize + 2, FontStyle.Bold) });
 
                 dgvDepartmentDetails.DataSource = null;
                 dgvDepartmentDetails.Columns.Clear();
@@ -769,7 +785,7 @@ namespace PersonnelManagementApp
 
                 chartPositionPie.Series.Add(series);
                 chartPositionPie.Titles.Clear();
-                chartPositionPie.Titles.Add(new Title("💼 توزیع پستهای شغلی") { Font = new Font("Segoe UI", 14, FontStyle.Bold) });
+                chartPositionPie.Titles.Add(new Title("💼 توزیع پستهای شغلی") { Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize + 2, FontStyle.Bold) });
 
                 dgvPositionDetails.DataSource = null;
                 dgvPositionDetails.Columns.Clear();
@@ -810,7 +826,7 @@ namespace PersonnelManagementApp
 
                 chartGenderPie.Series.Add(series);
                 chartGenderPie.Titles.Clear();
-                chartGenderPie.Titles.Add(new Title("👥 توزیع جنسیت") { Font = new Font("Segoe UI", 14, FontStyle.Bold) });
+                chartGenderPie.Titles.Add(new Title("👥 توزیع جنسیت") { Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize + 2, FontStyle.Bold) });
             }
             catch (Exception ex) { MessageBox.Show($"❌ خطا: {ex.Message}"); }
         }
@@ -840,7 +856,7 @@ namespace PersonnelManagementApp
 
                 chartJobLevelPie.Series.Add(series);
                 chartJobLevelPie.Titles.Clear();
-                chartJobLevelPie.Titles.Add(new Title("📈 توزیع سطح شغلی") { Font = new Font("Segoe UI", 14, FontStyle.Bold) });
+                chartJobLevelPie.Titles.Add(new Title("📈 توزیع سطح شغلی") { Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize + 2, FontStyle.Bold) });
             }
             catch (Exception ex) { MessageBox.Show($"❌ خطا: {ex.Message}"); }
         }
@@ -870,7 +886,7 @@ namespace PersonnelManagementApp
 
                 chartContractTypePie.Series.Add(series);
                 chartContractTypePie.Titles.Clear();
-                chartContractTypePie.Titles.Add(new Title("📋 توزیع نوع قرارداد") { Font = new Font("Segoe UI", 14, FontStyle.Bold) });
+                chartContractTypePie.Titles.Add(new Title("📋 توزیع نوع قرارداد") { Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize + 2, FontStyle.Bold) });
             }
             catch (Exception ex) { MessageBox.Show($"❌ خطا: {ex.Message}"); }
         }
@@ -900,7 +916,7 @@ namespace PersonnelManagementApp
 
                 chartProvincePie.Series.Add(series);
                 chartProvincePie.Titles.Clear();
-                chartProvincePie.Titles.Add(new Title("🗺️ توزیع بر اساس استان") { Font = new Font("Segoe UI", 14, FontStyle.Bold) });
+                chartProvincePie.Titles.Add(new Title("🗺️ توزیع بر اساس استان") { Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize + 2, FontStyle.Bold) });
             }
             catch (Exception ex) { MessageBox.Show($"❌ خطا: {ex.Message}"); }
         }
@@ -930,7 +946,7 @@ namespace PersonnelManagementApp
 
                 chartEducationPie.Series.Add(series);
                 chartEducationPie.Titles.Clear();
-                chartEducationPie.Titles.Add(new Title("📚 توزیع مدارک تحصیلی") { Font = new Font("Segoe UI", 14, FontStyle.Bold) });
+                chartEducationPie.Titles.Add(new Title("📚 توزیع مدارک تحصیلی") { Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize + 2, FontStyle.Bold) });
             }
             catch (Exception ex) { MessageBox.Show($"❌ خطا: {ex.Message}"); }
         }
@@ -960,7 +976,7 @@ namespace PersonnelManagementApp
 
                 chartCompanyPie.Series.Add(series);
                 chartCompanyPie.Titles.Clear();
-                chartCompanyPie.Titles.Add(new Title("🏢 توزیع شرکتها") { Font = new Font("Segoe UI", 14, FontStyle.Bold) });
+                chartCompanyPie.Titles.Add(new Title("🏢 توزیع شرکتها") { Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize + 2, FontStyle.Bold) });
             }
             catch (Exception ex) { MessageBox.Show($"❌ خطا: {ex.Message}"); }
         }
@@ -990,7 +1006,7 @@ namespace PersonnelManagementApp
 
                 chartWorkShiftPie.Series.Add(series);
                 chartWorkShiftPie.Titles.Clear();
-                chartWorkShiftPie.Titles.Add(new Title("⏰ توزیع شیفت‌های کاری") { Font = new Font("Segoe UI", 14, FontStyle.Bold) });
+                chartWorkShiftPie.Titles.Add(new Title("⏰ توزیع شیفت‌های کاری") { Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize + 2, FontStyle.Bold) });
             }
             catch (Exception ex) { MessageBox.Show($"❌ خطا: {ex.Message}"); }
         }
@@ -1047,8 +1063,8 @@ namespace PersonnelManagementApp
 
             dgv.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(0, 102, 204);
             dgv.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
-            dgv.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 11, FontStyle.Bold);
-            dgv.DefaultCellStyle.Font = new Font("Segoe UI", 10);
+            dgv.ColumnHeadersDefaultCellStyle.Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize, FontStyle.Bold);
+            dgv.DefaultCellStyle.Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize);
             dgv.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(240, 248, 255);
 
             dgv.Columns.Add("PersonnelID", "ID");
@@ -1076,7 +1092,7 @@ namespace PersonnelManagementApp
                 {
                     BackColor = Color.FromArgb(40, 167, 69),
                     ForeColor = Color.White,
-                    Font = new Font("Segoe UI", 10, FontStyle.Bold),
+                    Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize, FontStyle.Bold),
                     Alignment = DataGridViewContentAlignment.MiddleCenter,
                     Padding = new Padding(5)
                 }
@@ -1094,7 +1110,7 @@ namespace PersonnelManagementApp
                 {
                     BackColor = Color.FromArgb(220, 53, 69),
                     ForeColor = Color.White,
-                    Font = new Font("Segoe UI", 10, FontStyle.Bold),
+                    Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize, FontStyle.Bold),
                     Alignment = DataGridViewContentAlignment.MiddleCenter,
                     Padding = new Padding(5)
                 }
@@ -1115,76 +1131,24 @@ namespace PersonnelManagementApp
                 if (e.ColumnIndex == dgv.Columns["Edit"].Index && e.RowIndex >= 0)
                 {
                     int personnelID = Convert.ToInt32(dgv.Rows[e.RowIndex].Cells["PersonnelID"].Value);
-                    OpenEditForm(personnelID, detailsForm);
+                    // باز کردن فرم ویرایش
+                    MessageBox.Show($"فرم ویرایش برای پرسنل {personnelID} باید باز شود.", "اطلاع");
                 }
                 else if (e.ColumnIndex == dgv.Columns["Delete"].Index && e.RowIndex >= 0)
                 {
                     int personnelID = Convert.ToInt32(dgv.Rows[e.RowIndex].Cells["PersonnelID"].Value);
-                    DeletePersonnel(personnelID, detailsForm, dgv, e.RowIndex);
+                    // حذف پرسنل
+                    if (MessageBox.Show("آیا مطمئن هستید؟", "تأیید", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        // عملیات حذف
+                        dgv.Rows.RemoveAt(e.RowIndex);
+                        RefreshAllCharts();
+                    }
                 }
             };
 
             detailsForm.Controls.Add(dgv);
             detailsForm.ShowDialog();
-        }
-
-        // =============== متد باز کردن فرم ویرایش ===============
-        private void OpenEditForm(int personnelID, Form parentForm)
-        {
-            try
-            {
-                // فرم ویرایش رو باز کنید
-                FormPersonnelEdit editForm = new FormPersonnelEdit();
-                editForm.txtPersonnelID.Text = personnelID.ToString();
-                editForm.BtnLoad_Click(null, EventArgs.Empty);
-                editForm.ShowDialog(parentForm);
-                
-                // بعد از بسته شدن فرم، آپدیت کنید
-                RefreshAllCharts();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"❌ خطا در باز کردن فرم ویرایش: {ex.Message}", "خطا", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        // =============== متد حذف پرسنل ===============
-        private void DeletePersonnel(int personnelID, Form parentForm, DataGridView dgv, int rowIndex)
-        {
-            try
-            {
-                DialogResult result = MessageBox.Show(
-                    $"❓ آیا مطمئن هستید که می‌خواهید این پرسنل را حذف کنید؟",
-                    "تایید حذف",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Question);
-
-                if (result == DialogResult.Yes)
-                {
-                    // دستور حذف از دیتابیس
-                    string query = $"DELETE FROM Personnel WHERE PersonnelID = {personnelID}";
-                    dbHelper.ExecuteNonQuery(query);
-
-                    MessageBox.Show("✅ پرسنل با موفقیت حذف شد.", "موفق", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                    // حذف سطر از جدول
-                    dgv.Rows.RemoveAt(rowIndex);
-
-                    // آپدیت نمودارها
-                    LoadData();
-                    RefreshAllCharts();
-
-                    // اگر جدول خالی شد، فرم رو ببندید
-                    if (dgv.Rows.Count == 0)
-                    {
-                        parentForm.Close();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"❌ خطا در حذف پرسنل: {ex.Message}", "خطا", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
         }
 
         private void LoadStatisticalTable()
@@ -1195,6 +1159,7 @@ namespace PersonnelManagementApp
                 dgvPersonnelStats.Columns.Clear();
                 dgvPersonnelStats.Columns.Add("Metric", "معیار");
                 dgvPersonnelStats.Columns.Add("Value", "مقدار");
+                dgvPersonnelStats.DefaultCellStyle.Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize);
 
                 // خلاصه کلی
                 dgvPersonnelStats.Rows.Add("═══════════════════", "");
