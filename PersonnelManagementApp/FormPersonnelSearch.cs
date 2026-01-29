@@ -80,7 +80,7 @@ namespace PersonnelManagementApp
             {
                 Location = new Point(50, 360),
                 Size = new Size(300, 40),
-                Font = new Font("Tahoma", 12),
+                Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize),
                 PlaceholderText = "جستجوی آزاد (نام, نام خانوادگی, شماره پرسنلی, کد ملی)...",
                 BorderStyle = BorderStyle.None,
                 Name = "txtFreeSearch"
@@ -94,7 +94,7 @@ namespace PersonnelManagementApp
                 Text = "جستجو",
                 Location = new Point(360, 360),
                 Size = new Size(150, 40),
-                Font = new Font("Tahoma", 12),
+                Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize),
                 BackColor = Color.LightBlue,
                 ForeColor = Color.White,
                 Name = "btnSearch"
@@ -109,7 +109,7 @@ namespace PersonnelManagementApp
                 Text = "استان‌ها:",
                 Location = new Point(50, 410),
                 Size = new Size(200, 30),
-                Font = new Font("Tahoma", 12, FontStyle.Bold),
+                Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize, FontStyle.Bold),
                 ForeColor = Color.DarkBlue,
                 Name = "lblProvinces"
             };
@@ -120,7 +120,7 @@ namespace PersonnelManagementApp
                 Location = new Point(50, 440),
                 Size = new Size(200, 150),
                 BorderStyle = BorderStyle.None,
-                Font = new Font("Tahoma", 11),
+                Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize - 1),
                 Name = "clbProvinces"
             };
             RegisterThemedControl(clbProvinces);
@@ -130,7 +130,7 @@ namespace PersonnelManagementApp
                 Text = "شهرها:",
                 Location = new Point(260, 410),
                 Size = new Size(200, 30),
-                Font = new Font("Tahoma", 12, FontStyle.Bold),
+                Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize, FontStyle.Bold),
                 ForeColor = Color.DarkBlue,
                 Name = "lblCities"
             };
@@ -141,7 +141,7 @@ namespace PersonnelManagementApp
                 Location = new Point(260, 440),
                 Size = new Size(200, 150),
                 BorderStyle = BorderStyle.None,
-                Font = new Font("Tahoma", 11),
+                Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize - 1),
                 Enabled = false,
                 Name = "clbCities"
             };
@@ -152,7 +152,7 @@ namespace PersonnelManagementApp
                 Text = "امور:",
                 Location = new Point(470, 410),
                 Size = new Size(200, 30),
-                Font = new Font("Tahoma", 12, FontStyle.Bold),
+                Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize, FontStyle.Bold),
                 ForeColor = Color.DarkBlue,
                 Name = "lblAffairs"
             };
@@ -163,7 +163,7 @@ namespace PersonnelManagementApp
                 Location = new Point(470, 440),
                 Size = new Size(200, 150),
                 BorderStyle = BorderStyle.None,
-                Font = new Font("Tahoma", 11),
+                Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize - 1),
                 Enabled = false,
                 Name = "clbAffairs"
             };
@@ -174,7 +174,7 @@ namespace PersonnelManagementApp
                 Text = "ادارات:",
                 Location = new Point(680, 410),
                 Size = new Size(200, 30),
-                Font = new Font("Tahoma", 12, FontStyle.Bold),
+                Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize, FontStyle.Bold),
                 ForeColor = Color.DarkBlue,
                 Name = "lblDepartments"
             };
@@ -185,7 +185,7 @@ namespace PersonnelManagementApp
                 Location = new Point(680, 440),
                 Size = new Size(200, 150),
                 BorderStyle = BorderStyle.None,
-                Font = new Font("Tahoma", 11),
+                Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize - 1),
                 Enabled = false,
                 Name = "clbDepartments"
             };
@@ -196,7 +196,7 @@ namespace PersonnelManagementApp
                 Text = "نواحی:",
                 Location = new Point(890, 410),
                 Size = new Size(200, 30),
-                Font = new Font("Tahoma", 12, FontStyle.Bold),
+                Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize, FontStyle.Bold),
                 ForeColor = Color.DarkBlue,
                 Name = "lblDistricts"
             };
@@ -207,7 +207,7 @@ namespace PersonnelManagementApp
                 Location = new Point(890, 440),
                 Size = new Size(200, 150),
                 BorderStyle = BorderStyle.None,
-                Font = new Font("Tahoma", 11),
+                Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize - 1),
                 Enabled = false,
                 Name = "clbDistricts"
             };
@@ -218,7 +218,7 @@ namespace PersonnelManagementApp
                 Text = "پست‌ها:",
                 Location = new Point(1100, 410),
                 Size = new Size(200, 30),
-                Font = new Font("Tahoma", 12, FontStyle.Bold),
+                Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize, FontStyle.Bold),
                 ForeColor = Color.DarkBlue,
                 Name = "lblPosts"
             };
@@ -229,7 +229,7 @@ namespace PersonnelManagementApp
                 Location = new Point(1100, 440),
                 Size = new Size(200, 150),
                 BorderStyle = BorderStyle.None,
-                Font = new Font("Tahoma", 11),
+                Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize - 1),
                 Enabled = false,
                 Name = "clbPosts"
             };
@@ -254,7 +254,7 @@ namespace PersonnelManagementApp
                 Text = "نمایش نتایج",
                 Location = new Point(this.ClientSize.Width - 250, 600),
                 Size = new Size(200, 50),
-                Font = new Font("Tahoma", 12),
+                Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize),
                 BackColor = Color.LightGreen,
                 ForeColor = Color.White,
                 Name = "btnShow"
@@ -268,7 +268,7 @@ namespace PersonnelManagementApp
                 Text = "اکسپورت به CSV",
                 Location = new Point(this.ClientSize.Width - 460, 600),
                 Size = new Size(200, 50),
-                Font = new Font("Tahoma", 12),
+                Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize),
                 BackColor = Color.LightBlue,
                 ForeColor = Color.White,
                 Name = "btnExport"
@@ -282,7 +282,7 @@ namespace PersonnelManagementApp
                 Text = "برگشت به صفحه اصلی",
                 Location = new Point(50, 600),
                 Size = new Size(200, 50),
-                Font = new Font("Tahoma", 12),
+                Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize),
                 BackColor = Color.LightCoral,
                 ForeColor = Color.White,
                 Name = "btnBack"
