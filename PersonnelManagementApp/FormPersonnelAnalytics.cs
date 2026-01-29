@@ -1125,24 +1125,79 @@ namespace PersonnelManagementApp
                 rowIndex++;
             }
 
-            // Event Handler برای کلیک دکمه ها
+            // ============ CORRECTED EVENT HANDLER ============
             dgv.CellClick += (sender, e) =>
             {
                 if (e.ColumnIndex == dgv.Columns["Edit"].Index && e.RowIndex >= 0)
                 {
+                    // FIXED: Open FormPersonnelEdit with PersonnelID
                     int personnelID = Convert.ToInt32(dgv.Rows[e.RowIndex].Cells["PersonnelID"].Value);
-                    // باز کردن فرم ویرایش
-                    MessageBox.Show($"فرم ویرایش برای پرسنل {personnelID} باید باز شود.", "اطلاع");
+                    
+                    try
+                    {
+                        DbHelper db = new DbHelper();
+                        DataTable? personnelData = db.GetPersonnelByID(personnelID);
+                        
+                        if (personnelData != null && personnelData.Rows.Count > 0)
+                        {
+                            FormPersonnelEdit editForm = new FormPersonnelEdit(personnelID);
+                            if (editForm.ShowDialog() == DialogResult.OK)
+                            {
+                                MessageBox.Show("✅ پرسنل با موفقیت به‌روز شد.", "موفق");
+                                RefreshAllCharts();
+                                detailsForm.Close();
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("❌ خطا: نمی‌توان اطلاعات پرسنل را دریافت کرد.", "خطا");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"❌ خطا: {ex.Message}", "خطا");
+                    }
                 }
                 else if (e.ColumnIndex == dgv.Columns["Delete"].Index && e.RowIndex >= 0)
                 {
+                    // FIXED: Delete from database and refresh UI
                     int personnelID = Convert.ToInt32(dgv.Rows[e.RowIndex].Cells["PersonnelID"].Value);
-                    // حذف پرسنل
-                    if (MessageBox.Show("آیا مطمئن هستید؟", "تأیید", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    string firstName = dgv.Rows[e.RowIndex].Cells["FirstName"].Value?.ToString() ?? "";
+                    string lastName = dgv.Rows[e.RowIndex].Cells["LastName"].Value?.ToString() ?? "";
+                    
+                    DialogResult result = MessageBox.Show(
+                        $"آیا مطمئن هستید که می‌خواهید این پرسنل را حذف کنید?\n\nنام: {firstName} {lastName}\nشماره: {personnelID}",
+                        "تأیید حذف",
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Warning,
+                        MessageBoxDefaultButton.Button2);
+                    
+                    if (result == DialogResult.Yes)
                     {
-                        // عملیات حذف
-                        dgv.Rows.RemoveAt(e.RowIndex);
-                        RefreshAllCharts();
+                        try
+                        {
+                            DbHelper db = new DbHelper();
+                            if (db.DeletePersonnel(personnelID))
+                            {
+                                MessageBox.Show($"✅ پرسنل {firstName} {lastName} با موفقیت حذف شد.", "موفق");
+                                dgv.Rows.RemoveAt(e.RowIndex);
+                                RefreshAllCharts();
+                                
+                                if (dgv.Rows.Count == 0)
+                                {
+                                    MessageBox.Show("تمام رکوردها حذف شدند.", "اطلاع");
+                                    detailsForm.Close();
+                                }
+                            }
+                            else
+                            {
+                                MessageBox.Show("❌ خطا در حذف پرسنل. لطفاً دوباره تلاش کنید.", "خطا");
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"❌ خطا: {ex.Message}", "خطا");
+                        }
                     }
                 }
             };
