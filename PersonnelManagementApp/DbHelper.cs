@@ -674,39 +674,19 @@ namespace PersonnelManagementApp
         // ============ NEW: Personnel Management Methods ============
 
         /// <summary>
-        /// حذف پرسنل از دیتابیس و فعال کردن رویداد به‌روز‌رسانی
+        /// حذف پرسنل از دیتابیس
         /// </summary>
         public bool DeletePersonnel(int personnelID)
         {
             try
             {
-                // ابتدا نام پرسنل را دریافت کنید برای رویداد
-                DataTable? dt = GetPersonnelByID(personnelID);
-                string personnelName = "نامعلوم";
-                
-                if (dt != null && dt.Rows.Count > 0)
-                {
-                    personnelName = $"{dt.Rows[0]["FirstName"]} {dt.Rows[0]["LastName"]}";
-                }
-
-                // اجرای دستور حذف
                 string query = "DELETE FROM Personnel WHERE PersonnelID = ?";
                 OleDbParameter[] parameters = new OleDbParameter[]
                 {
                     new OleDbParameter("?", personnelID)
                 };
-                
                 int result = ExecuteNonQuery(query, parameters);
-                
-                // اگر حذف موفق بود، رویداد را فعال کنید
-                if (result > 0)
-                {
-                    // فعال کردن رویداد حذف
-                    DataChangeEventManager.RaisePersonnelDeleted(personnelID, personnelName);
-                    return true;
-                }
-                
-                return false;
+                return result > 0;
             }
             catch (Exception ex)
             {
