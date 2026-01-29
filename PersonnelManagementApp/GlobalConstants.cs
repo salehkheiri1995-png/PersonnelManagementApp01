@@ -95,4 +95,113 @@ namespace PersonnelManagementApp
             public const string ExportSuccessful = "صادرات با موفقیت انجام شد.";
         }
     }
+
+    /// <summary>
+    /// Global Event Manager for Real-Time Data Updates
+    /// این کلاس برای مدیریت رویدادهای لحظه‌ای در سراسر اپلیکیشن استفاده می‌شود
+    /// </summary>
+    public static class DataChangeNotifier
+    {
+        /// <summary>
+        /// رویدادی که زمانی فراخوانی می‌شود که داده‌ای حذف شود
+        /// </summary>
+        public static event EventHandler<DataChangeEventArgs> OnPersonnelDeleted;
+
+        /// <summary>
+        /// رویدادی که زمانی فراخوانی می‌شود که داده‌ای اضافه شود
+        /// </summary>
+        public static event EventHandler<DataChangeEventArgs> OnPersonnelAdded;
+
+        /// <summary>
+        /// رویدادی که زمانی فراخوانی می‌شود که داده‌ای ویرایش شود
+        /// </summary>
+        public static event EventHandler<DataChangeEventArgs> OnPersonnelUpdated;
+
+        /// <summary>
+        /// رویدادی برای آپدیت تمام نمودارها
+        /// </summary>
+        public static event EventHandler<EventArgs> OnRefreshAllCharts;
+
+        /// <summary>
+        /// متد برای فراخوانی رویدادِ حذف
+        /// </summary>
+        public static void NotifyPersonnelDeleted(int personnelId, string firstName, string lastName)
+        {
+            OnPersonnelDeleted?.Invoke(null, new DataChangeEventArgs
+            {
+                PersonnelID = personnelId,
+                FirstName = firstName,
+                LastName = lastName,
+                ChangeType = DataChangeType.Deleted,
+                Timestamp = DateTime.Now
+            });
+
+            // آپدیت تمام نمودارها
+            RefreshAllCharts();
+        }
+
+        /// <summary>
+        /// متد برای فراخوانی رویدادِ اضافه کردن
+        /// </summary>
+        public static void NotifyPersonnelAdded(int personnelId, string firstName, string lastName)
+        {
+            OnPersonnelAdded?.Invoke(null, new DataChangeEventArgs
+            {
+                PersonnelID = personnelId,
+                FirstName = firstName,
+                LastName = lastName,
+                ChangeType = DataChangeType.Added,
+                Timestamp = DateTime.Now
+            });
+
+            RefreshAllCharts();
+        }
+
+        /// <summary>
+        /// متد برای فراخوانی رویدادِ ویرایش
+        /// </summary>
+        public static void NotifyPersonnelUpdated(int personnelId, string firstName, string lastName)
+        {
+            OnPersonnelUpdated?.Invoke(null, new DataChangeEventArgs
+            {
+                PersonnelID = personnelId,
+                FirstName = firstName,
+                LastName = lastName,
+                ChangeType = DataChangeType.Updated,
+                Timestamp = DateTime.Now
+            });
+
+            RefreshAllCharts();
+        }
+
+        /// <summary>
+        /// متد برای آپدیت تمام نمودارها
+        /// </summary>
+        public static void RefreshAllCharts()
+        {
+            OnRefreshAllCharts?.Invoke(null, EventArgs.Empty);
+        }
+    }
+
+    /// <summary>
+    /// کلاس برای انتقال اطلاعاتِ تغییرات داده
+    /// </summary>
+    public class DataChangeEventArgs : EventArgs
+    {
+        public int PersonnelID { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public DataChangeType ChangeType { get; set; }
+        public DateTime Timestamp { get; set; }
+    }
+
+    /// <summary>
+    /// نوع تغییر داده‌ای
+    /// </summary>
+    public enum DataChangeType
+    {
+        Added,
+        Updated,
+        Deleted
+    }
 }
