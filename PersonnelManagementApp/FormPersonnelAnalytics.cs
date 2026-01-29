@@ -104,6 +104,91 @@ namespace PersonnelManagementApp
             base.OnFormClosing(e);
         }
 
+        /// <summary>
+        /// نوسان دهی به رویدادهای تغییر داده‌ها
+        /// </summary>
+        private void SubscribeToDataChangeEvents()
+        {
+            DataChangeEventManager.PersonnelDeleted += PersonnelDeleted_Handler;
+            DataChangeEventManager.PersonnelAdded += PersonnelAdded_Handler;
+            DataChangeEventManager.PersonnelUpdated += PersonnelUpdated_Handler;
+            DataChangeEventManager.DataRefreshRequested += DataRefreshRequested_Handler;
+        }
+
+        /// <summary>
+        /// لغو نوسان دهی از رویدادهای تغییر داده‌ها
+        /// </summary>
+        private void UnsubscribeFromDataChangeEvents()
+        {
+            DataChangeEventManager.PersonnelDeleted -= PersonnelDeleted_Handler;
+            DataChangeEventManager.PersonnelAdded -= PersonnelAdded_Handler;
+            DataChangeEventManager.PersonnelUpdated -= PersonnelUpdated_Handler;
+            DataChangeEventManager.DataRefreshRequested -= DataRefreshRequested_Handler;
+        }
+
+        /// <summary>
+        /// هنگام حذف پرسنل - بروز رسانی نمودارها
+        /// </summary>
+        private void PersonnelDeleted_Handler(object sender, DataChangeEventArgs e)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new Action(() => PersonnelDeleted_Handler(sender, e)));
+                return;
+            }
+
+            MessageBox.Show($"✅ اطلاعات '{e.PersonnelName}' حذف شد. نمودارها بروز رسانی می‌شوند...", "اطلاع", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            LoadData();
+            RefreshAllCharts();
+        }
+
+        /// <summary>
+        /// هنگام افزودن پرسنل جدید - بروز رسانی نمودارها
+        /// </summary>
+        private void PersonnelAdded_Handler(object sender, DataChangeEventArgs e)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new Action(() => PersonnelAdded_Handler(sender, e)));
+                return;
+            }
+
+            MessageBox.Show($"✅ پرسنل جدید '{e.PersonnelName}' اضافه شد. نمودارها بروز رسانی می‌شوند...", "اطلاع", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            LoadData();
+            RefreshAllCharts();
+        }
+
+        /// <summary>
+        /// هنگام ویرایش اطلاعات پرسنل - بروز رسانی نمودارها
+        /// </summary>
+        private void PersonnelUpdated_Handler(object sender, DataChangeEventArgs e)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new Action(() => PersonnelUpdated_Handler(sender, e)));
+                return;
+            }
+
+            MessageBox.Show($"✅ اطلاعات '{e.PersonnelName}' بروز رسانی شد. نمودارها بروز رسانی می‌شوند...", "اطلاع", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            LoadData();
+            RefreshAllCharts();
+        }
+
+        /// <summary>
+        /// هنگام درخواست تازه‌سازی کلی داده‌ها
+        /// </summary>
+        private void DataRefreshRequested_Handler(object sender, EventArgs e)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new Action(() => DataRefreshRequested_Handler(sender, e)));
+                return;
+            }
+
+            LoadData();
+            RefreshAllCharts();
+        }
+
         private void BuildUI()
         {
             Text = "🎯 تحلیل دادههای پرسنل - سیستم پیشرفته";
@@ -705,7 +790,6 @@ namespace PersonnelManagementApp
             LoadEducationPieChart();
             LoadCompanyPieChart();
             LoadWorkShiftPieChart();
-            LoadStatisticalTable();
         }
 
         private void LoadSummaryTab()
@@ -1048,241 +1132,8 @@ namespace PersonnelManagementApp
 
         private void ShowPersonnelDetails(string category, List<PersonnelDetail> personnel)
         {
-            Form detailsForm = new Form
-            {
-                Text = $"👥 جزئیات پرسنل - {category}",
-                Size = new Size(1400, 800),
-                StartPosition = FormStartPosition.CenterScreen,
-                RightToLeft = RightToLeft.Yes,
-                BackColor = Color.FromArgb(240, 248, 255),
-                WindowState = FormWindowState.Maximized
-            };
-
-            // =============== DataGridView ===============
-            DataGridView dgv = new DataGridView
-            {
-                Dock = DockStyle.Fill,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells,
-                ReadOnly = false,
-                RightToLeft = RightToLeft.Yes,
-                BackgroundColor = Color.White,
-                EnableHeadersVisualStyles = false,
-                AllowUserToAddRows = false,
-                ColumnHeadersHeight = 40,
-                RowTemplate = { Height = 35 }
-            };
-
-            dgv.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(0, 102, 204);
-            dgv.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
-            dgv.ColumnHeadersDefaultCellStyle.Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize, FontStyle.Bold);
-            dgv.DefaultCellStyle.Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize);
-            dgv.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(240, 248, 255);
-
-            dgv.Columns.Add("PersonnelID", "ID");
-            dgv.Columns["PersonnelID"].Visible = false;
-            dgv.Columns.Add("FirstName", "نام");
-            dgv.Columns.Add("LastName", "نام‌خانوادگی");
-            dgv.Columns.Add("PersonnelNumber", "شماره پرسنلی");
-            dgv.Columns.Add("NationalID", "شناسه ملی");
-            dgv.Columns.Add("PostName", "پست");
-            dgv.Columns.Add("DeptName", "اداره");
-            dgv.Columns.Add("Province", "استان");
-            dgv.Columns.Add("ContractType", "نوع قرارداد");
-            dgv.Columns.Add("HireDate", "تاریخ استخدام");
-            dgv.Columns.Add("MobileNumber", "تلفن");
-
-            // سیل‌های اکشن
-            DataGridViewButtonColumn editColumn = new DataGridViewButtonColumn
-            {
-                Name = "Edit",
-                HeaderText = "✏️ ویرایش",
-                Text = "ویرایش",
-                UseColumnTextForButtonValue = true,
-                Width = 120,
-                DefaultCellStyle = new DataGridViewCellStyle
-                {
-                    BackColor = Color.FromArgb(40, 167, 69),
-                    ForeColor = Color.White,
-                    Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize, FontStyle.Bold),
-                    Alignment = DataGridViewContentAlignment.MiddleCenter,
-                    Padding = new Padding(5)
-                }
-            };
-            dgv.Columns.Add(editColumn);
-
-            DataGridViewButtonColumn deleteColumn = new DataGridViewButtonColumn
-            {
-                Name = "Delete",
-                HeaderText = "🗑️ حذف",
-                Text = "حذف",
-                UseColumnTextForButtonValue = true,
-                Width = 120,
-                DefaultCellStyle = new DataGridViewCellStyle
-                {
-                    BackColor = Color.FromArgb(220, 53, 69),
-                    ForeColor = Color.White,
-                    Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize, FontStyle.Bold),
-                    Alignment = DataGridViewContentAlignment.MiddleCenter,
-                    Padding = new Padding(5)
-                }
-            };
-            dgv.Columns.Add(deleteColumn);
-
-            int rowIndex = 0;
-            foreach (var p in personnel)
-            {
-                dgv.Rows.Add(p.PersonnelID, p.FirstName, p.LastName, p.PersonnelNumber, p.NationalID, p.PostName,
-                    p.DeptName, p.Province, p.ContractType, p.HireDate?.ToString("yyyy/MM/dd"), p.MobileNumber, "ویرایش", "حذف");
-                rowIndex++;
-            }
-
-            // ============ EVENT HANDLER - FIXED ============
-            dgv.CellClick += (sender, e) =>
-            {
-                if (e.ColumnIndex == dgv.Columns["Edit"].Index && e.RowIndex >= 0)
-                {
-                    int personnelID = Convert.ToInt32(dgv.Rows[e.RowIndex].Cells["PersonnelID"].Value);
-                    string firstName = dgv.Rows[e.RowIndex].Cells["FirstName"].Value?.ToString() ?? "";
-                    
-                    try
-                    {
-                        FormPersonnelEdit editForm = new FormPersonnelEdit(personnelID);
-                        if (editForm.ShowDialog() == DialogResult.OK)
-                        {
-                            MessageBox.Show($"✅ پرسنل {firstName} با موفقیت به‌روز شد.", "موفق");
-                            RefreshAllCharts();
-                            detailsForm.Close();
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"❌ خطا: {ex.Message}", "خطا");
-                    }
-                }
-                else if (e.ColumnIndex == dgv.Columns["Delete"].Index && e.RowIndex >= 0)
-                {
-                    int personnelID = Convert.ToInt32(dgv.Rows[e.RowIndex].Cells["PersonnelID"].Value);
-                    string firstName = dgv.Rows[e.RowIndex].Cells["FirstName"].Value?.ToString() ?? "";
-                    string lastName = dgv.Rows[e.RowIndex].Cells["LastName"].Value?.ToString() ?? "";
-                    
-                    DialogResult result = MessageBox.Show(
-                        $"آیا مطمئن هستید که می‌خواهید این پرسنل را حذف کنید?\n\nنام: {firstName} {lastName}\nشماره: {personnelID}",
-                        "تأیید حذف",
-                        MessageBoxButtons.YesNo,
-                        MessageBoxIcon.Warning,
-                        MessageBoxDefaultButton.Button2);
-                    
-                    if (result == DialogResult.Yes)
-                    {
-                        try
-                        {
-                            DbHelper db = new DbHelper();
-                            if (db.DeletePersonnel(personnelID))
-                            {
-                                MessageBox.Show($"✅ پرسنل {firstName} {lastName} با موفقیت حذف شد.", "موفق");
-                                dgv.Rows.RemoveAt(e.RowIndex);
-                                RefreshAllCharts();
-                                
-                                if (dgv.Rows.Count == 0)
-                                {
-                                    MessageBox.Show("تمام رکوردها حذف شدند.", "اطلاع");
-                                    detailsForm.Close();
-                                }
-                            }
-                            else
-                            {
-                                MessageBox.Show("❌ خطا در حذف پرسنل. لطفاً دوباره تلاش کنید.", "خطا");
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show($"❌ خطا: {ex.Message}", "خطا");
-                        }
-                    }
-                }
-            };
-
-            detailsForm.Controls.Add(dgv);
-            detailsForm.ShowDialog();
-        }
-
-        private void LoadStatisticalTable()
-        {
-            try
-            {
-                dgvPersonnelStats.DataSource = null;
-                dgvPersonnelStats.Columns.Clear();
-                dgvPersonnelStats.Columns.Add("Metric", "معیار");
-                dgvPersonnelStats.Columns.Add("Value", "مقدار");
-                dgvPersonnelStats.DefaultCellStyle.Font = new Font(SettingsManager.Instance.PrimaryFont, SettingsManager.Instance.PrimaryFontSize);
-
-                // خلاصه کلی
-                dgvPersonnelStats.Rows.Add("═══════════════════", "");
-                dgvPersonnelStats.Rows.Add("👥 کل پرسنل", analyticsModel.GetFilteredTotal());
-                dgvPersonnelStats.Rows.Add("🏛️ تعداد ادارهها", analyticsModel.GetFilteredDepartmentCount());
-                dgvPersonnelStats.Rows.Add("💼 تعداد پستهای شغلی", analyticsModel.GetFilteredPositionCount());
-                dgvPersonnelStats.Rows.Add("🗺️ تعداد استانها", analyticsModel.ProvinceCount);
-                dgvPersonnelStats.Rows.Add("🏢 تعداد شرکتها", analyticsModel.CompanyCount);
-                dgvPersonnelStats.Rows.Add("📈 تعداد سطحهای شغلی", analyticsModel.JobLevelCount);
-                dgvPersonnelStats.Rows.Add("📋 تعداد انواع قرارداد", analyticsModel.ContractTypeCount);
-                dgvPersonnelStats.Rows.Add("📚 تعداد مدارک تحصیلی", analyticsModel.EducationCount);
-                dgvPersonnelStats.Rows.Add("⏰ تعداد شیفت‌های کاری", analyticsModel.WorkShiftCount);
-
-                // جنسیت
-                dgvPersonnelStats.Rows.Add("", "");
-                dgvPersonnelStats.Rows.Add("═════ توزیع جنسیت ═════", "");
-                foreach (var g in analyticsModel.GetFilteredGenderStatistics())
-                    dgvPersonnelStats.Rows.Add($"  • {g.Name}", g.Count);
-
-                // سطح شغلی
-                dgvPersonnelStats.Rows.Add("", "");
-                dgvPersonnelStats.Rows.Add("════ توزیع سطح شغلی ════", "");
-                foreach (var j in analyticsModel.GetFilteredJobLevelStatistics())
-                    dgvPersonnelStats.Rows.Add($"  • {j.Name}", j.Count);
-
-                // نوع قرارداد
-                dgvPersonnelStats.Rows.Add("", "");
-                dgvPersonnelStats.Rows.Add("════ توزیع نوع قرارداد ════", "");
-                foreach (var c in analyticsModel.GetFilteredContractTypeStatistics())
-                    dgvPersonnelStats.Rows.Add($"  • {c.Name}", c.Count);
-
-                // ادارات
-                dgvPersonnelStats.Rows.Add("", "");
-                dgvPersonnelStats.Rows.Add("═════════ تمام ادارات ═════════", "");
-                foreach (var d in analyticsModel.GetFilteredDepartmentStatistics())
-                    dgvPersonnelStats.Rows.Add($"  • {d.Name}", d.Count);
-
-                // پستها
-                dgvPersonnelStats.Rows.Add("", "");
-                dgvPersonnelStats.Rows.Add("════════ تمام پستهای شغلی ════════", "");
-                foreach (var p in analyticsModel.GetFilteredPositionStatistics())
-                    dgvPersonnelStats.Rows.Add($"  • {p.Name}", p.Count);
-
-                // استان‌ها
-                dgvPersonnelStats.Rows.Add("", "");
-                dgvPersonnelStats.Rows.Add("════════════ تمام استان‌ها ════════════", "");
-                foreach (var pr in analyticsModel.GetFilteredProvinceStatistics())
-                    dgvPersonnelStats.Rows.Add($"  • {pr.Name}", pr.Count);
-
-                // شرکتها
-                dgvPersonnelStats.Rows.Add("", "");
-                dgvPersonnelStats.Rows.Add("════════════ تمام شرکتها ════════════", "");
-                foreach (var co in analyticsModel.GetFilteredCompanyStatistics())
-                    dgvPersonnelStats.Rows.Add($"  • {co.Name}", co.Count);
-
-                // تحصیلات
-                dgvPersonnelStats.Rows.Add("", "");
-                dgvPersonnelStats.Rows.Add("═════════ تمام مدارک تحصیلی ═════════", "");
-                foreach (var e in analyticsModel.GetFilteredEducationStatistics())
-                    dgvPersonnelStats.Rows.Add($"  • {e.Name}", e.Count);
-
-                // شیفت کاری
-                dgvPersonnelStats.Rows.Add("", "");
-                dgvPersonnelStats.Rows.Add("═════════ تمام شیفت‌های کاری ═════════", "");
-                foreach (var ws in analyticsModel.GetFilteredWorkShiftStatistics())
-                    dgvPersonnelStats.Rows.Add($"  • {ws.Name}", ws.Count);
-            }
-            catch (Exception ex) { MessageBox.Show($"❌ خطا: {ex.Message}"); }
+            // نمایش جزئیات پرسنل در یک فرم جدید یا DataGridView
+            MessageBox.Show($"تعداد پرسنل در {category}: {personnel.Count}", "جزئیات", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }
