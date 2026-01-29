@@ -45,11 +45,11 @@ namespace PersonnelManagementApp
         /// <summary>
         /// دریافت فونت از تنظیمات
         /// </summary>
-        private Font GetSettingFont(float size = 12f)
+        private Font GetSettingFont(float size)
         {
             try
             {
-                return new Font(settingsManager.SelectedFontName, size);
+                return new Font(SettingsManager.Instance.PrimaryFont, size);
             }
             catch
             {
@@ -96,8 +96,8 @@ namespace PersonnelManagementApp
             int totalControlWidth = labelWidth + controlWidth + 10;
             int margin = 20;
             int columnWidth = (formWidth - 3 * margin) / 2;
-            float labelFontSize = settingsManager.SelectedFontSize + 1; // یک اندازه بزرگتر برای لیبل
-            float controlFontSize = settingsManager.SelectedFontSize;
+            float labelFontSize = SettingsManager.Instance.PrimaryFontSize + 1; // یک اندازه بزرگتر برای لیبل
+            float controlFontSize = SettingsManager.Instance.PrimaryFontSize;
 
             // موقعیت پایه برای ستون سمت راست
             int baseXRight = formWidth - margin - columnWidth;
@@ -115,7 +115,7 @@ namespace PersonnelManagementApp
                 Text = "ثبت پرسنل جدید",
                 Location = new Point((formWidth - 400) / 2, yHeader),
                 Size = new Size(400, 50),
-                Font = new Font(settingsManager.SelectedFontName, 18, FontStyle.Bold),
+                Font = new Font(SettingsManager.Instance.PrimaryFont, 18, FontStyle.Bold),
                 ForeColor = Color.Navy,
                 TextAlign = ContentAlignment.MiddleCenter
             };
