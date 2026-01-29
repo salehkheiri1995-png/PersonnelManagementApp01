@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace PersonnelManagementApp
 {
-    public partial class FormPersonnelEdit : Form
+    public partial class FormPersonnelEdit : BaseThemedForm
     {
         private DbHelper db = new DbHelper();
         public TextBox txtPersonnelID;
