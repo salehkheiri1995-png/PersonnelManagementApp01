@@ -1125,32 +1125,22 @@ namespace PersonnelManagementApp
                 rowIndex++;
             }
 
-            // ============ CORRECTED EVENT HANDLER ============
+            // ============ EVENT HANDLER - FIXED ============
             dgv.CellClick += (sender, e) =>
             {
                 if (e.ColumnIndex == dgv.Columns["Edit"].Index && e.RowIndex >= 0)
                 {
-                    // FIXED: Open FormPersonnelEdit with PersonnelID
                     int personnelID = Convert.ToInt32(dgv.Rows[e.RowIndex].Cells["PersonnelID"].Value);
+                    string firstName = dgv.Rows[e.RowIndex].Cells["FirstName"].Value?.ToString() ?? "";
                     
                     try
                     {
-                        DbHelper db = new DbHelper();
-                        DataTable? personnelData = db.GetPersonnelByID(personnelID);
-                        
-                        if (personnelData != null && personnelData.Rows.Count > 0)
+                        FormPersonnelEdit editForm = new FormPersonnelEdit(personnelID);
+                        if (editForm.ShowDialog() == DialogResult.OK)
                         {
-                            FormPersonnelEdit editForm = new FormPersonnelEdit(personnelID);
-                            if (editForm.ShowDialog() == DialogResult.OK)
-                            {
-                                MessageBox.Show("✅ پرسنل با موفقیت به‌روز شد.", "موفق");
-                                RefreshAllCharts();
-                                detailsForm.Close();
-                            }
-                        }
-                        else
-                        {
-                            MessageBox.Show("❌ خطا: نمی‌توان اطلاعات پرسنل را دریافت کرد.", "خطا");
+                            MessageBox.Show($"✅ پرسنل {firstName} با موفقیت به‌روز شد.", "موفق");
+                            RefreshAllCharts();
+                            detailsForm.Close();
                         }
                     }
                     catch (Exception ex)
@@ -1160,7 +1150,6 @@ namespace PersonnelManagementApp
                 }
                 else if (e.ColumnIndex == dgv.Columns["Delete"].Index && e.RowIndex >= 0)
                 {
-                    // FIXED: Delete from database and refresh UI
                     int personnelID = Convert.ToInt32(dgv.Rows[e.RowIndex].Cells["PersonnelID"].Value);
                     string firstName = dgv.Rows[e.RowIndex].Cells["FirstName"].Value?.ToString() ?? "";
                     string lastName = dgv.Rows[e.RowIndex].Cells["LastName"].Value?.ToString() ?? "";
