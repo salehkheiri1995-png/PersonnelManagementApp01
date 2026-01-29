@@ -5,17 +5,15 @@ using System.Windows.Forms;
 
 namespace PersonnelManagementApp
 {
-    public partial class FormSettings : Form
+    public partial class FormSettings : BaseThemedForm
     {
-        private readonly SettingsManager settingsManager;
         private Color selectedAddColor, selectedEditColor, selectedDeleteColor;
         private Color selectedSearchColor, selectedAnalyticsColor, selectedSettingsColor;
         private Color selectedPrimaryColor, selectedSecondaryColor;
         private Color selectedBackgroundColor, selectedTextColor;
 
-        public FormSettings(SettingsManager settings)
+        public FormSettings()
         {
-            settingsManager = settings;
             InitializeComponent();
             LoadCurrentSettings();
         }
@@ -25,8 +23,8 @@ namespace PersonnelManagementApp
             this.Text = "تنظیمات (Settings)";
             this.Size = new Size(700, 800);
             this.StartPosition = FormStartPosition.CenterScreen;
-            this.RightToLeft = RightToLeft.Yes;
-            this.BackColor = Color.FromArgb(240, 248, 255);
+            this.RightToLeft = settingsManager.RightToLeftLayout ? RightToLeft.Yes : RightToLeft.No;
+            this.BackColor = settingsManager.BackgroundColor;
             this.Font = new Font("Tahoma", 11);
 
             // Main TabControl
@@ -35,6 +33,7 @@ namespace PersonnelManagementApp
                 Dock = DockStyle.Fill,
                 Margin = new Padding(10)
             };
+            RegisterThemedControl(mainTab);
 
             // Tab 1: Fonts
             TabPage fontPage = CreateFontTab();
@@ -66,10 +65,12 @@ namespace PersonnelManagementApp
                 Location = new Point(this.Width - 120, 8),
                 BackColor = Color.LightGreen,
                 ForeColor = Color.White,
-                Font = new Font("Tahoma", 10, FontStyle.Bold)
+                Font = new Font("Tahoma", 10, FontStyle.Bold),
+                Name = "btnSave"
             };
             btnSave.Click += (s, e) => BtnSave_Click();
             ApplyRoundedCorners(btnSave, 8);
+            RegisterThemedControl(btnSave);
 
             Button btnCancel = new Button
             {
@@ -78,10 +79,12 @@ namespace PersonnelManagementApp
                 Location = new Point(this.Width - 230, 8),
                 BackColor = Color.LightCoral,
                 ForeColor = Color.White,
-                Font = new Font("Tahoma", 10, FontStyle.Bold)
+                Font = new Font("Tahoma", 10, FontStyle.Bold),
+                Name = "btnCancel"
             };
             btnCancel.Click += (s, e) => this.Close();
             ApplyRoundedCorners(btnCancel, 8);
+            RegisterThemedControl(btnCancel);
 
             Button btnReset = new Button
             {
@@ -90,10 +93,12 @@ namespace PersonnelManagementApp
                 Location = new Point(this.Width - 340, 8),
                 BackColor = Color.Orange,
                 ForeColor = Color.White,
-                Font = new Font("Tahoma", 10, FontStyle.Bold)
+                Font = new Font("Tahoma", 10, FontStyle.Bold),
+                Name = "btnReset"
             };
             btnReset.Click += (s, e) => BtnReset_Click();
             ApplyRoundedCorners(btnReset, 8);
+            RegisterThemedControl(btnReset);
 
             buttonPanel.Controls.Add(btnSave);
             buttonPanel.Controls.Add(btnCancel);
@@ -107,7 +112,10 @@ namespace PersonnelManagementApp
             int y = 15;
 
             // Primary Font
-            tab.Controls.Add(CreateLabel("فونت اصلی (Primary Font):", 10, y));
+            Label lbl1 = CreateLabel("فونت اصلی (Primary Font):", 10, y);
+            tab.Controls.Add(lbl1);
+            RegisterThemedControl(lbl1);
+
             ComboBox cbPrimaryFont = new ComboBox
             {
                 Location = new Point(10, y + 25),
@@ -118,10 +126,14 @@ namespace PersonnelManagementApp
             cbPrimaryFont.Items.AddRange(settingsManager.PersianFonts);
             cbPrimaryFont.SelectedItem = settingsManager.PrimaryFont;
             tab.Controls.Add(cbPrimaryFont);
+            RegisterThemedControl(cbPrimaryFont);
             y += 60;
 
             // Primary Font Size
-            tab.Controls.Add(CreateLabel("اندازه فونت اصلی (Size):", 10, y));
+            Label lbl2 = CreateLabel("اندازه فونت اصلی (Size):", 10, y);
+            tab.Controls.Add(lbl2);
+            RegisterThemedControl(lbl2);
+
             NumericUpDown nudPrimarySize = new NumericUpDown
             {
                 Location = new Point(10, y + 25),
@@ -132,10 +144,14 @@ namespace PersonnelManagementApp
                 Name = "nudPrimarySize"
             };
             tab.Controls.Add(nudPrimarySize);
+            RegisterThemedControl(nudPrimarySize);
             y += 60;
 
             // Title Font
-            tab.Controls.Add(CreateLabel("فونت عنوان (Title Font):", 10, y));
+            Label lbl3 = CreateLabel("فونت عنوان (Title Font):", 10, y);
+            tab.Controls.Add(lbl3);
+            RegisterThemedControl(lbl3);
+
             ComboBox cbTitleFont = new ComboBox
             {
                 Location = new Point(10, y + 25),
@@ -146,10 +162,14 @@ namespace PersonnelManagementApp
             cbTitleFont.Items.AddRange(settingsManager.PersianFonts);
             cbTitleFont.SelectedItem = settingsManager.TitleFont;
             tab.Controls.Add(cbTitleFont);
+            RegisterThemedControl(cbTitleFont);
             y += 60;
 
             // Title Font Size
-            tab.Controls.Add(CreateLabel("اندازه فونت عنوان (Size):", 10, y));
+            Label lbl4 = CreateLabel("اندازه فونت عنوان (Size):", 10, y);
+            tab.Controls.Add(lbl4);
+            RegisterThemedControl(lbl4);
+
             NumericUpDown nudTitleSize = new NumericUpDown
             {
                 Location = new Point(10, y + 25),
@@ -160,10 +180,14 @@ namespace PersonnelManagementApp
                 Name = "nudTitleSize"
             };
             tab.Controls.Add(nudTitleSize);
+            RegisterThemedControl(nudTitleSize);
             y += 60;
 
             // Button Font
-            tab.Controls.Add(CreateLabel("فونت دکمه (Button Font):", 10, y));
+            Label lbl5 = CreateLabel("فونت دکمه (Button Font):", 10, y);
+            tab.Controls.Add(lbl5);
+            RegisterThemedControl(lbl5);
+
             ComboBox cbButtonFont = new ComboBox
             {
                 Location = new Point(10, y + 25),
@@ -174,10 +198,14 @@ namespace PersonnelManagementApp
             cbButtonFont.Items.AddRange(settingsManager.PersianFonts);
             cbButtonFont.SelectedItem = settingsManager.ButtonFont;
             tab.Controls.Add(cbButtonFont);
+            RegisterThemedControl(cbButtonFont);
             y += 60;
 
             // Button Font Size
-            tab.Controls.Add(CreateLabel("اندازه فونت دکمه (Size):", 10, y));
+            Label lbl6 = CreateLabel("اندازه فونت دکمه (Size):", 10, y);
+            tab.Controls.Add(lbl6);
+            RegisterThemedControl(lbl6);
+
             NumericUpDown nudButtonSize = new NumericUpDown
             {
                 Location = new Point(10, y + 25),
@@ -188,6 +216,7 @@ namespace PersonnelManagementApp
                 Name = "nudButtonSize"
             };
             tab.Controls.Add(nudButtonSize);
+            RegisterThemedControl(nudButtonSize);
 
             tab.Tag = new object[] { cbPrimaryFont, nudPrimarySize, cbTitleFont, nudTitleSize, cbButtonFont, nudButtonSize };
             return tab;
@@ -200,86 +229,120 @@ namespace PersonnelManagementApp
             int x = 10;
 
             // Primary Color
-            tab.Controls.Add(CreateLabel("رنگ اصلی (Primary):", x, y));
+            Label lblPrimary = CreateLabel("رنگ اصلی (Primary):", x, y);
+            tab.Controls.Add(lblPrimary);
+            RegisterThemedControl(lblPrimary);
+
             Button btnPrimaryColor = CreateColorButton(settingsManager.PrimaryColor, x, y + 25, "رنگ اصلی");
             btnPrimaryColor.Click += (s, e) => {
                 selectedPrimaryColor = ChooseColor(settingsManager.PrimaryColor);
                 btnPrimaryColor.BackColor = selectedPrimaryColor;
             };
             tab.Controls.Add(btnPrimaryColor);
+            RegisterThemedControl(btnPrimaryColor);
             y += 60;
 
             // Secondary Color
-            tab.Controls.Add(CreateLabel("رنگ ثانویه (Secondary):", x, y));
+            Label lblSecondary = CreateLabel("رنگ ثانویه (Secondary):", x, y);
+            tab.Controls.Add(lblSecondary);
+            RegisterThemedControl(lblSecondary);
+
             Button btnSecondaryColor = CreateColorButton(settingsManager.SecondaryColor, x, y + 25, "رنگ ثانویه");
             btnSecondaryColor.Click += (s, e) => {
                 selectedSecondaryColor = ChooseColor(settingsManager.SecondaryColor);
                 btnSecondaryColor.BackColor = selectedSecondaryColor;
             };
             tab.Controls.Add(btnSecondaryColor);
+            RegisterThemedControl(btnSecondaryColor);
             y += 60;
 
             // Background Color
-            tab.Controls.Add(CreateLabel("رنگ پسزمینه (Background):", x, y));
+            Label lblBackground = CreateLabel("رنگ پسزمینه (Background):", x, y);
+            tab.Controls.Add(lblBackground);
+            RegisterThemedControl(lblBackground);
+
             Button btnBackgroundColor = CreateColorButton(settingsManager.BackgroundColor, x, y + 25, "رنگ پسزمینه");
             btnBackgroundColor.Click += (s, e) => {
                 selectedBackgroundColor = ChooseColor(settingsManager.BackgroundColor);
                 btnBackgroundColor.BackColor = selectedBackgroundColor;
             };
             tab.Controls.Add(btnBackgroundColor);
+            RegisterThemedControl(btnBackgroundColor);
             y += 60;
 
             // Text Color
-            tab.Controls.Add(CreateLabel("رنگ متن (Text):", x, y));
+            Label lblText = CreateLabel("رنگ متن (Text):", x, y);
+            tab.Controls.Add(lblText);
+            RegisterThemedControl(lblText);
+
             Button btnTextColor = CreateColorButton(settingsManager.TextColor, x, y + 25, "رنگ متن");
             btnTextColor.Click += (s, e) => {
                 selectedTextColor = ChooseColor(settingsManager.TextColor);
                 btnTextColor.BackColor = selectedTextColor;
             };
             tab.Controls.Add(btnTextColor);
+            RegisterThemedControl(btnTextColor);
 
             // Button Colors Section
             y += 80;
-            tab.Controls.Add(CreateLabel("رنگ‌های دکمه (Button Colors):", x, y, true));
+            Label lblButtonColors = CreateLabel("رنگ‌های دکمه (Button Colors):", x, y, true);
+            tab.Controls.Add(lblButtonColors);
+            RegisterThemedControl(lblButtonColors);
             y += 40;
 
             // Add Color
-            tab.Controls.Add(CreateLabel("رنگ ثبت (Add):", x, y));
+            Label lblAdd = CreateLabel("رنگ ثبت (Add):", x, y);
+            tab.Controls.Add(lblAdd);
+            RegisterThemedControl(lblAdd);
+
             Button btnAddColor = CreateColorButton(settingsManager.ButtonAddColor, x, y + 25, "رنگ ثبت");
             btnAddColor.Click += (s, e) => {
                 selectedAddColor = ChooseColor(settingsManager.ButtonAddColor);
                 btnAddColor.BackColor = selectedAddColor;
             };
             tab.Controls.Add(btnAddColor);
+            RegisterThemedControl(btnAddColor);
 
             // Edit Color
-            tab.Controls.Add(CreateLabel("رنگ ویرایش (Edit):", x + 200, y));
+            Label lblEdit = CreateLabel("رنگ ویرایش (Edit):", x + 200, y);
+            tab.Controls.Add(lblEdit);
+            RegisterThemedControl(lblEdit);
+
             Button btnEditColor = CreateColorButton(settingsManager.ButtonEditColor, x + 200, y + 25, "رنگ ویرایش");
             btnEditColor.Click += (s, e) => {
                 selectedEditColor = ChooseColor(settingsManager.ButtonEditColor);
                 btnEditColor.BackColor = selectedEditColor;
             };
             tab.Controls.Add(btnEditColor);
+            RegisterThemedControl(btnEditColor);
 
             y += 60;
 
             // Delete Color
-            tab.Controls.Add(CreateLabel("رنگ حذف (Delete):", x, y));
+            Label lblDelete = CreateLabel("رنگ حذف (Delete):", x, y);
+            tab.Controls.Add(lblDelete);
+            RegisterThemedControl(lblDelete);
+
             Button btnDeleteColor = CreateColorButton(settingsManager.ButtonDeleteColor, x, y + 25, "رنگ حذف");
             btnDeleteColor.Click += (s, e) => {
                 selectedDeleteColor = ChooseColor(settingsManager.ButtonDeleteColor);
                 btnDeleteColor.BackColor = selectedDeleteColor;
             };
             tab.Controls.Add(btnDeleteColor);
+            RegisterThemedControl(btnDeleteColor);
 
             // Search Color
-            tab.Controls.Add(CreateLabel("رنگ جستجو (Search):", x + 200, y));
+            Label lblSearch = CreateLabel("رنگ جستجو (Search):", x + 200, y);
+            tab.Controls.Add(lblSearch);
+            RegisterThemedControl(lblSearch);
+
             Button btnSearchColor = CreateColorButton(settingsManager.ButtonSearchColor, x + 200, y + 25, "رنگ جستجو");
             btnSearchColor.Click += (s, e) => {
                 selectedSearchColor = ChooseColor(settingsManager.ButtonSearchColor);
                 btnSearchColor.BackColor = selectedSearchColor;
             };
             tab.Controls.Add(btnSearchColor);
+            RegisterThemedControl(btnSearchColor);
 
             tab.Tag = new object[] { btnPrimaryColor, btnSecondaryColor, btnBackgroundColor, btnTextColor, btnAddColor, btnEditColor, btnDeleteColor, btnSearchColor };
             return tab;
@@ -291,7 +354,10 @@ namespace PersonnelManagementApp
             int y = 15;
 
             // Button Corner Radius
-            tab.Controls.Add(CreateLabel("بررسی گوشه دکمه (Button Corner Radius):", 10, y));
+            Label lblRadius = CreateLabel("بررسی گوشه دکمه (Button Corner Radius):", 10, y);
+            tab.Controls.Add(lblRadius);
+            RegisterThemedControl(lblRadius);
+
             NumericUpDown nudRadius = new NumericUpDown
             {
                 Location = new Point(10, y + 25),
@@ -302,6 +368,7 @@ namespace PersonnelManagementApp
                 Name = "nudRadius"
             };
             tab.Controls.Add(nudRadius);
+            RegisterThemedControl(nudRadius);
             y += 60;
 
             // RTL Layout
@@ -315,6 +382,7 @@ namespace PersonnelManagementApp
                 Font = new Font("Tahoma", 11)
             };
             tab.Controls.Add(chkRTL);
+            RegisterThemedControl(chkRTL);
             y += 40;
 
             // Dark Mode
@@ -328,6 +396,7 @@ namespace PersonnelManagementApp
                 Font = new Font("Tahoma", 11)
             };
             tab.Controls.Add(chkDarkMode);
+            RegisterThemedControl(chkDarkMode);
 
             tab.Tag = new object[] { nudRadius, chkRTL, chkDarkMode };
             return tab;
@@ -340,7 +409,8 @@ namespace PersonnelManagementApp
                 Text = text,
                 Location = new Point(x, y),
                 Size = new Size(400, 25),
-                Font = new Font("Tahoma", isBold ? 12 : 10, isBold ? FontStyle.Bold : FontStyle.Regular)
+                Font = new Font("Tahoma", isBold ? 12 : 10, isBold ? FontStyle.Bold : FontStyle.Regular),
+                ForeColor = settingsManager.TextColor
             };
         }
 
@@ -371,17 +441,6 @@ namespace PersonnelManagementApp
             return brightness > 128 ? Color.Black : Color.White;
         }
 
-        private void ApplyRoundedCorners(Control control, int radius)
-        {
-            GraphicsPath path = new GraphicsPath();
-            path.AddArc(0, 0, radius, radius, 180, 90);
-            path.AddArc(control.Width - radius, 0, radius, radius, 270, 90);
-            path.AddArc(control.Width - radius, control.Height - radius, radius, radius, 0, 90);
-            path.AddArc(0, control.Height - radius, radius, radius, 90, 90);
-            path.CloseFigure();
-            control.Region = new Region(path);
-        }
-
         private void LoadCurrentSettings()
         {
             // Settings are loaded into controls during CreateTab methods
@@ -395,7 +454,7 @@ namespace PersonnelManagementApp
                 TabControl mainTab = (TabControl)this.Controls[0];
                 TabPage fontTab = mainTab.TabPages[0];
                 var fontControls = (object[])fontTab.Tag;
-                
+
                 settingsManager.PrimaryFont = (fontControls[0] as ComboBox).SelectedItem.ToString();
                 settingsManager.PrimaryFontSize = (int)(fontControls[1] as NumericUpDown).Value;
                 settingsManager.TitleFont = (fontControls[2] as ComboBox).SelectedItem.ToString();
@@ -403,8 +462,27 @@ namespace PersonnelManagementApp
                 settingsManager.ButtonFont = (fontControls[4] as ComboBox).SelectedItem.ToString();
                 settingsManager.ButtonFontSize = (int)(fontControls[5] as NumericUpDown).Value;
 
-                // Save all settings
+                // Get color settings
+                TabPage colorTab = mainTab.TabPages[1];
+                if (selectedPrimaryColor != Color.Empty) settingsManager.PrimaryColor = selectedPrimaryColor;
+                if (selectedSecondaryColor != Color.Empty) settingsManager.SecondaryColor = selectedSecondaryColor;
+                if (selectedBackgroundColor != Color.Empty) settingsManager.BackgroundColor = selectedBackgroundColor;
+                if (selectedTextColor != Color.Empty) settingsManager.TextColor = selectedTextColor;
+                if (selectedAddColor != Color.Empty) settingsManager.ButtonAddColor = selectedAddColor;
+                if (selectedEditColor != Color.Empty) settingsManager.ButtonEditColor = selectedEditColor;
+                if (selectedDeleteColor != Color.Empty) settingsManager.ButtonDeleteColor = selectedDeleteColor;
+                if (selectedSearchColor != Color.Empty) settingsManager.ButtonSearchColor = selectedSearchColor;
+
+                // Get UI settings
+                TabPage uiTab = mainTab.TabPages[2];
+                var uiControls = (object[])uiTab.Tag;
+                settingsManager.ButtonCornerRadius = (int)(uiControls[0] as NumericUpDown).Value;
+                settingsManager.RightToLeftLayout = (uiControls[1] as CheckBox).Checked;
+                settingsManager.EnableDarkMode = (uiControls[2] as CheckBox).Checked;
+
+                // Save to file
                 settingsManager.SaveSettings();
+
                 MessageBox.Show("تنظیمات با موفقیت ذخیره شدند.\nSettings saved successfully.",
                                 "موفقیت", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.Close();
